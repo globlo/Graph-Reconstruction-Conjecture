@@ -1,8 +1,10 @@
 public class Deck {
     public Graph[] deckArr;
+    public int numberOfCards;
     
     public Deck(Graph[] deckArray) {
         deckArr = deckArray;
+        numberOfCards = deckArr.length;
     }
 
     public void printDeck() {
