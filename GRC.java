@@ -5,13 +5,17 @@ public class GRC {
                                 {0,1,0,1},
                                 {1,1,1,0}};
 
+
+
+
         Graph sampleGraph = new Graph(sampleMatrix);
+        //Graph sampleGraph = new Graph(AkisScanner("input.txt"));
         System.out.println("Sample Graph:");
         sampleGraph.printGraph();
         System.out.print("Edges in sample graph:");
         System.out.println(sampleGraph.numberOfEdges);
 
-        Deck sampleDeck = Graph.createDeck(sampleGraph);
+        Deck sampleDeck = createDeck(sampleGraph);
         System.out.println("Sample Deck:");
         sampleDeck.printDeck();
 
@@ -22,7 +26,7 @@ public class GRC {
 
     //Reconstruct a graph after first turning it into a deck, then back into a graph
     public static void reconstructGraph(Graph graphToReconstruct) {
-        Deck deckToReconstruct = Graph.createDeck(graphToReconstruct);
+        Deck deckToReconstruct = createDeck(graphToReconstruct);
         Graph reconstructedGraph = reconstructGraph(deckToReconstruct);
         graphToReconstruct.printGraph();
         reconstructedGraph.printGraph();
@@ -34,6 +38,17 @@ public class GRC {
         reconstructedGraph.initializeGraphToZeros();
         //Reconstruction stuff goes here
         return reconstructedGraph;
+    }
+
+    //Create full deck of subgraphs from given graph    
+    public static Deck createDeck(Graph originalGraph){
+        Graph[] deckArr = new Graph[originalGraph.graphOrder];
+        Deck deckToReturn;
+        for (int i = 0; i < originalGraph.graphOrder; i++) {
+            deckArr[i] = Graph.creatSubgraphWithRemovedVertex(originalGraph, i);
+        }
+        deckToReturn = new Deck(deckArr);
+        return deckToReturn;
     }
 
     //Return the number of edges in the original graph by using Kelly's lemma

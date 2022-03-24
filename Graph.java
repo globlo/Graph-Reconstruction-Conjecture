@@ -1,5 +1,5 @@
 public class Graph {
-    public int[][] adjMat;
+    public final int[][] adjMat;
     public int graphOrder = 1;
     public int numberOfEdges = 0;
     
