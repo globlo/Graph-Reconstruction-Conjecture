@@ -120,4 +120,21 @@ public class Graph {
         }
         return edgeCount / 2;
     }
+    
+    /*
+		Purpose: Save the graph object to the text file
+	*/
+    public void printGraphToTextFile() throws IOException {
+
+		File file = new File("output.txt"); //Output file name where graph object will be saved
+		PrintWriter outputFile = new PrintWriter(file);
+
+		for(int i = 0; i < adjMat[0].length; i++) {
+			for (int j = 0; j < adjMat[0].length; j++) {
+				outputFile.print(adjMat[i][j]);
+			}
+			outputFile.println();
+		}
+		outputFile.close();
+    }
 }
