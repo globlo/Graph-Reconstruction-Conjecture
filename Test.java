@@ -5,7 +5,7 @@ public class Test {
 
 public static void main(String[] args){
 
-//hHowdy
+
     FileWriter fw = null;
         try {
             File file = new File("test.txt");
