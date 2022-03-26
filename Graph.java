@@ -2,7 +2,7 @@ public class Graph {
     public int[][] adjMat;
     public int graphOrder = 1;
     public int numberOfEdges = 0;
-    
+
     //Constructor for graph
     public Graph(int[][] adjacencyMatrix) {
         if (isMatrixValid(adjacencyMatrix) == true) {
@@ -26,11 +26,11 @@ public class Graph {
             graphIsLegit = false;
         } else {
             //Iterate over rows
-            for(int row = 0; row < matrixToCheck.length; row++) {
+            for (int row = 0; row < matrixToCheck.length; row++) {
                 //Iteratore over columns
-                for(int col = 0; col < matrixToCheck.length; col++) {
+                for (int col = 0; col < matrixToCheck.length; col++) {
                     //If a graph doesn't have a matching value across it's diaganol, marks as illegitemate
-                    if (matrixToCheck[row][col] != matrixToCheck[col][row]){
+                    if (matrixToCheck[row][col] != matrixToCheck[col][row]) {
                         graphIsLegit = false;
                         System.out.println("Attempted to create graph using matrix that isn't mirrored");
                     }
@@ -66,15 +66,15 @@ public class Graph {
         //Used to tell which row/col we're writing to in the subgraph, which can be different from the cell we're reading from
         int subGraphRow = 0;
         int subGraphCol = 0;
-        
+
         //Iterate over all rows of original graph
-        for(int row = 0; row < orderOfOriginalGraph; row++) {
+        for (int row = 0; row < orderOfOriginalGraph; row++) {
             //If the row corresponds to the removed vertex, skip it
             if (row != vertexNumber) {
                 //Otherwise, iterate over all columns of the original graph
-                for(int col = 0; col < orderOfOriginalGraph; col++) {
+                for (int col = 0; col < orderOfOriginalGraph; col++) {
                     //If column corresponds to the removed vertex, skip it
-                    if(col != vertexNumber) {
+                    if (col != vertexNumber) {
                         //Write contents of original graph cell to currently marked subgraph cell
                         subAdjMat[subGraphRow][subGraphCol] = originalGraph.adjMat[row][col];
                         subGraphCol++;
@@ -87,9 +87,9 @@ public class Graph {
         Graph graphToReturn = new Graph(subAdjMat);
         return graphToReturn;
     }
- 
+
     //Create full deck of subgraphs from given graph    
-    public static Deck createDeck(Graph originalGraph){
+    public static Deck createDeck(Graph originalGraph) {
         Graph[] deckArr = new Graph[originalGraph.graphOrder];
         Deck deckToReturn;
         for (int i = 0; i < originalGraph.graphOrder; i++) {
@@ -120,21 +120,36 @@ public class Graph {
         }
         return edgeCount / 2;
     }
-    
+
     /*
         Purpose: Save the graph object to the text file
     */
     public void printGraphToTextFile() throws IOException {
 
-	File file = new File("output.txt"); //Output file name where graph object will be saved
-	PrintWriter outputFile = new PrintWriter(file);
+        File file = new File("output.txt"); //Output file name where graph object will be saved
+        PrintWriter outputFile = new PrintWriter(file);
 
-	for(int i = 0; i < adjMat[0].length; i++) {
-		for (int j = 0; j < adjMat[0].length; j++) {
-			outputFile.print(adjMat[i][j]);
-		}
-		outputFile.println();
-	}
-	outputFile.close();
+        for (int i = 0; i < adjMat[0].length; i++) {
+            for (int j = 0; j < adjMat[0].length; j++) {
+                outputFile.print(adjMat[i][j]);
+            }
+            outputFile.println();
+        }
+        outputFile.close();
     }
+
+    public int getDegreeSequence(int[][] graphOrDeck) {
+        int[] degreeSequence = new int[graphOrDeck.length];
+        for (int i = 0; i < graphOrDeck[0].length; i++) {
+            int counter = 0;
+            for (int j = 0; j < graphOrDeck[0].length; j++) {
+                if (graphOrDeck[i][j] == 1) {
+                    counter++;
+                }
+                degreeSequence[i] = counter;
+            }
+        }
+        return degreeSequence;
+    }
+}
 }
