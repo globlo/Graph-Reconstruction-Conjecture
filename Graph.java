@@ -121,6 +121,7 @@ public class Graph {
         return edgeCount / 2;
     }
 
+
     /*
         Purpose: Save the graph object to the text file
     */
@@ -151,5 +152,29 @@ public class Graph {
         }
         return degreeSequence;
     }
+
+
+    public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] verteces_to_connect) {
+
+
+        //add/allocate new row & column with 0s (new vertex)
+        int [][] new_graph = new int[graph.length +1][graph.length +1];
+        int i, j;
+        for(i=0; i< graph.length; i++){
+            for(j=0; j< graph.length; j++){
+                new_graph[i][j] = graph[i][j];
+            }
+        }
+
+        //connect the new verteces to the given vertex 
+        for(i=0; i< verteces_to_connect.length; i++){ 
+            new_graph[graph.length][verteces_to_connect[i]-1] = 1;
+            new_graph[verteces_to_connect[i]-1][graph.length] = 1;
+        }
+
+        return new_graph;
+
+    }
 }
 }
+
