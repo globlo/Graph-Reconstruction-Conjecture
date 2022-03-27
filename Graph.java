@@ -120,4 +120,62 @@ public class Graph {
         }
         return edgeCount / 2;
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    /*
+        Purpose: Save the graph object to the text file
+    */
+    public void printGraphToTextFile() throws IOException {
+
+        File file = new File("output.txt"); //Output file name where graph object will be saved
+        PrintWriter outputFile = new PrintWriter(file);
+
+        for (int i = 0; i < adjMat[0].length; i++) {
+            for (int j = 0; j < adjMat[0].length; j++) {
+                outputFile.print(adjMat[i][j]);
+            }
+            outputFile.println();
+        }
+        outputFile.close();
+    }
+
+    public int getDegreeSequence(int[][] graphOrDeck) {
+        int[] degreeSequence = new int[graphOrDeck.length];
+        for (int i = 0; i < graphOrDeck[0].length; i++) {
+            int counter = 0;
+            for (int j = 0; j < graphOrDeck[0].length; j++) {
+                if (graphOrDeck[i][j] == 1) {
+                    counter++;
+                }
+                degreeSequence[i] = counter;
+            }
+        }
+        return degreeSequence;
+    }
+
+    public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] verteces_to_connect) {
+
+
+        //add/allocate new row & column with 0s (new vertex)
+        int [][] new_graph = new int[graph.length +1][graph.length +1];
+        int i, j;
+        for(i=0; i< graph.length; i++){
+            for(j=0; j< graph.length; j++){
+                new_graph[i][j] = graph[i][j];
+            }
+        }
+
+        //connect the new verteces to the given vertex 
+        for(i=0; i< verteces_to_connect.length; i++){ 
+            new_graph[graph.length][verteces_to_connect[i]-1] = 1;
+            new_graph[verteces_to_connect[i]-1][graph.length] = 1;
+        }
+
+        return new_graph;
+
+    }
+}
+}
+>>>>>>> Stashed changes
