@@ -175,7 +175,7 @@ public class Graph {
         return new_graph;
 
     }
-
+  
     //return binary with 0 or 1 for each index 
     public static int []CalculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
 
@@ -197,6 +197,7 @@ public class Graph {
 
         return vertexes_missed_sequeence;
     }
+
 }
 }
 
