@@ -138,7 +138,7 @@ public class Graph {
     }
 
 
-    public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] verteces_to_connect) {
+    public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] vertices_to_connect) {
 
         //add/allocate new row & column with 0s (new vertex)
         int [][] new_graph = new int[graph.length +1][graph.length +1];
@@ -150,9 +150,9 @@ public class Graph {
         }
 
         //connect the new verteces to the given vertex 
-        for(i=0; i< verteces_to_connect.length; i++){ 
-            new_graph[graph.length][verteces_to_connect[i]-1] = 1;
-            new_graph[verteces_to_connect[i]-1][graph.length] = 1;
+        for(i=0; i< vertices_to_connect.length; i++){ 
+            new_graph[graph.length][vertices_to_connect[i]-1] = 1;
+            new_graph[vertices_to_connect[i]-1][graph.length] = 1;
         }
 
         return new_graph;

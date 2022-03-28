@@ -15,4 +15,15 @@ public class Deck {
             }
         }
     }
+
+    //Create full deck of subgraphs from given graph    
+    public static Deck createDeck(Graph originalGraph){
+        Graph[] deckArr = new Graph[originalGraph.graphOrder];
+        Deck deckToReturn;
+        for (int i = 0; i < originalGraph.graphOrder; i++) {
+            deckArr[i] = Graph.creatSubgraphWithRemovedVertex(originalGraph, i);
+        }
+        deckToReturn = new Deck(deckArr);
+        return deckToReturn;
+    }
 }
