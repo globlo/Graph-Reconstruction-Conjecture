@@ -175,6 +175,29 @@ public class Graph {
         return new_graph;
 
     }
+  
+    //return binary with 0 or 1 for each index 
+    public static int []CalculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
+
+        int [] current_sequence = new int[graph[0].length];
+        int [] vertexes_missed_sequeence = new int[graph[0].length];  //change later
+        int i, j, count=0;
+        
+        //calculate the current sequence in the graph
+        for(i=0; i< graph.length; i++){
+            for(j=0; j< graph.length; j++){
+                current_sequence[i] += graph[i][j];
+            }
+            System.out.print(current_sequence[i]);
+            //find the vertex that misses edges 
+            if(current_sequence[i] < ExpectedDegreeSequence[i]) {
+                vertexes_missed_sequeence[i] = 1;
+            }
+        }
+
+        return vertexes_missed_sequeence;
+    }
+
 }
 }
 
