@@ -10,7 +10,7 @@ public class Graph {
             graphOrder = adjMat[0].length;
             numberOfEdges = countNumerOfEdgesInGraph();
         } else {
-            //If the graph is invalid, create single vertex graph instead to not break things too much
+            //If the graph is invalid, create single vertex graph instead to not break things *too much*
             int[][] singleVertexGraphMatrix = {{0}};
             adjMat = singleVertexGraphMatrix;
         }
@@ -122,24 +122,8 @@ public class Graph {
     }
 
 
-    /*
-        Purpose: Save the graph object to the text file
-    */
-    public void printGraphToTextFile() throws IOException {
-
-        File file = new File("output.txt"); //Output file name where graph object will be saved
-        PrintWriter outputFile = new PrintWriter(file);
-
-        for (int i = 0; i < adjMat[0].length; i++) {
-            for (int j = 0; j < adjMat[0].length; j++) {
-                outputFile.print(adjMat[i][j]);
-            }
-            outputFile.println();
-        }
-        outputFile.close();
-    }
-
-    public int getDegreeSequence(int[][] graphOrDeck) {
+    //Returns the degree sequence of a graph
+    public int[] getDegreeSequence(int[][] graphOrDeck) {
         int[] degreeSequence = new int[graphOrDeck.length];
         for (int i = 0; i < graphOrDeck[0].length; i++) {
             int counter = 0;
@@ -155,7 +139,6 @@ public class Graph {
 
 
     public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] verteces_to_connect) {
-
 
         //add/allocate new row & column with 0s (new vertex)
         int [][] new_graph = new int[graph.length +1][graph.length +1];
@@ -177,11 +160,11 @@ public class Graph {
     }
   
     //return binary with 0 or 1 for each index 
-    public static int []CalculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
+    public static int[] CalculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
 
         int [] current_sequence = new int[graph[0].length];
         int [] vertexes_missed_sequeence = new int[graph[0].length];  //change later
-        int i, j, count=0;
+        int i, j = 0;
         
         //calculate the current sequence in the graph
         for(i=0; i< graph.length; i++){
@@ -194,10 +177,6 @@ public class Graph {
                 vertexes_missed_sequeence[i] = 1;
             }
         }
-
         return vertexes_missed_sequeence;
     }
-
 }
-}
-
