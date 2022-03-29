@@ -33,4 +33,10 @@ public class Deck {
         Deck deckToReturn = new Deck(deckArr);
         return deckToReturn;
     }
+
+    //Gets the degree sequence of deck
+    // public int[] getDegreeSequenceOfDeck(Deck deckToRead) {
+    //     int[] degreeSequence = 
+    //     return degreeSequence;
+    // }
 }

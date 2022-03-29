@@ -21,4 +21,13 @@ public class MiscTools {
         Arrays.sort(tmpSeq2);
         return Arrays.equals(tmpSeq1, tmpSeq2);
     }
+
+    //Set an adjacency matrix to all zeros
+    public void setMatrixToZeros(int[][] matrix) {
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix.length; col++) {
+                matrix[row][col] = 0;
+            }
+        }
+    }
 }

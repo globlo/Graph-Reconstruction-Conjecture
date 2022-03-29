@@ -56,7 +56,7 @@ public class GraphLookerAtter {
         }
 
         //Fill mappingList with all permutations
-        combinatoricsTools.permutationGenerator(baseMap, 0, mappingList);
+        CombinatoricsTools.permutationGenerator(baseMap, 0, mappingList);
         //Convert mappingList to int matrix
         for(int i = 0; i < finalMapList.length; i++) {
             for (int j = 0; j < finalMapList[i].length; j++) {
