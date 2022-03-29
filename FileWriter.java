@@ -6,13 +6,11 @@ public class FileWriter {
     
     //Purpose: Save the graph object to the text file
     public void printGraphToTextFile(Graph graphToWrite) throws IOException {
-
         File file = new File("graphOutput.txt"); //Output file name where graph object will be saved
         PrintWriter outputFile = new PrintWriter(file);
-
-        for (int i = 0; i < graphToWrite.adjMat.length; i++) {
-            for (int j = 0; j < graphToWrite.adjMat[i].length; j++) {
-                outputFile.print(graphToWrite.adjMat[i][j]);
+        for (int row = 0; row < graphToWrite.adjMat.length; row++) {
+            for (int col = 0; col < graphToWrite.adjMat[row].length; col++) {
+                outputFile.print(graphToWrite.adjMat[row][col]);
             }
             outputFile.println();
         }
@@ -23,11 +21,11 @@ public class FileWriter {
     public void printDeckToTextFile(Deck deckToWrite) throws IOException {
         File file = new File("deckOutput.txt");
         PrintWriter outputFile = new PrintWriter(file);
-        for (int i = 0; i < deckToWrite.numberOfCards; i++) {
-            outputFile.println("C" + (i + 1));
-            for (int j = 0; j < deckToWrite.deckArr[i].adjMat.length; j++) {
-                for (int k = 0; k < deckToWrite.deckArr[i].adjMat[j].length; k++) {
-                    outputFile.print(deckToWrite.deckArr[i].adjMat[j][k]);
+        for (int card = 0; card < deckToWrite.numberOfCards; card++) {
+            outputFile.println("C" + (card + 1));
+            for (int row = 0; row < deckToWrite.deckArr[card].adjMat.length; row++) {
+                for (int col = 0; col < deckToWrite.deckArr[card].adjMat[row].length; col++) {
+                    outputFile.print(deckToWrite.deckArr[card].adjMat[row][col]);
                 }
                 outputFile.println();
             }
