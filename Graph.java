@@ -138,18 +138,35 @@ public class Graph {
         outputFile.close();
     }
 
-    public int getDegreeSequence(int[][] graphOrDeck) {
-        int[] degreeSequence = new int[graphOrDeck.length];
-        for (int i = 0; i < graphOrDeck[0].length; i++) {
-            int counter = 0;
-            for (int j = 0; j < graphOrDeck[0].length; j++) {
-                if (graphOrDeck[i][j] == 1) {
-                    counter++;
-                }
-                degreeSequence[i] = counter;
-            }
-        }
-        return degreeSequence;
+    //Gets the degree sequence of graph
+    public int[] getDegreeSequenceOfGraph(int[][] graph) throws IOException {
+	    int[] degreeSequence = new int[graph.length];
+
+		for(int i = 0; i < graph[0].length; i++) {
+			int counter = 0;
+			for (int j = 0; j < graph[0].length; j++) {
+				if(graph[i][j] == 1){
+					counter++;
+				}
+			}
+			degreeSequence[i] = counter;
+		}
+		return degreeSequence;
     }
-}
+
+    //Gets the degree sequence of deck
+    public int[] getDegreeSequenceOfDeck(Graph deck) throws IOException {
+		int[] degreeSequence = new int[deck.adjMat.length];
+
+		for(int i = 0; i < deck.adjMat.length; i++) {
+			int counter = 0;
+			for (int j = 0; j < deck.adjMat.length; j++) {
+				if(deck.adjMat[i][j] == 1){
+					counter++;
+				}
+			}
+			degreeSequence[i] = counter;
+		}
+		return degreeSequence;
+    }
 }
