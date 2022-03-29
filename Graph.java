@@ -121,20 +121,50 @@ public class Graph {
         return edgeCount / 2;
     }
 
+		//Save the graph object to the text file
+    public void printGraphToTextFile() throws IOException {
+        File file = new File("output.txt"); //Output file name where graph object will be saved
+        PrintWriter outputFile = new PrintWriter(file);
 
-    //Returns the degree sequence of a graph
-    public int[] getDegreeSequence(int[][] graphOrDeck) {
-        int[] degreeSequence = new int[graphOrDeck.length];
-        for (int i = 0; i < graphOrDeck[0].length; i++) {
-            int counter = 0;
-            for (int j = 0; j < graphOrDeck[0].length; j++) {
-                if (graphOrDeck[i][j] == 1) {
-                    counter++;
-                }
-                degreeSequence[i] = counter;
+        for (int i = 0; i < adjMat[0].length; i++) {
+            for (int j = 0; j < adjMat[0].length; j++) {
+                outputFile.print(adjMat[i][j]);
             }
+            outputFile.println();
         }
-        return degreeSequence;
+        outputFile.close();
+    }
+
+    //Gets the degree sequence of graph
+    public int[] getDegreeSequenceOfGraph(int[][] graph) throws IOException {
+	    int[] degreeSequence = new int[graph.length];
+
+      for(int i = 0; i < graph[0].length; i++) {
+        int counter = 0;
+        for (int j = 0; j < graph[0].length; j++) {
+          if(graph[i][j] == 1){
+            counter++;
+          }
+        }
+        degreeSequence[i] = counter;
+      }
+      return degreeSequence;
+    }
+
+    //Gets the degree sequence of deck
+    public int[] getDegreeSequenceOfDeck(Graph deck) throws IOException {
+      int[] degreeSequence = new int[deck.adjMat.length];
+
+      for(int i = 0; i < deck.adjMat.length; i++) {
+        int counter = 0;
+        for (int j = 0; j < deck.adjMat.length; j++) {
+          if(deck.adjMat[i][j] == 1){
+            counter++;
+          }
+        }
+        degreeSequence[i] = counter;
+      }
+      return degreeSequence;
     }
 
 
