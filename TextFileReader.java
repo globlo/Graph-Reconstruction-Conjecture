@@ -17,6 +17,7 @@ public class TextFileReader{
 				}
 				System.out.println();
 		   }
+		   br.close();
         }
    	    catch (IOException e) {
    		      e.printStackTrace();

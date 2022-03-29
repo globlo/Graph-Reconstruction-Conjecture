@@ -1,6 +1,5 @@
-import java.io.*;
+import java.io.File;
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class file_to_obj {
 
@@ -10,7 +9,7 @@ public static void main(String[] args)throws Exception{
  
 
         // pass the path to the file as a parameter
-        File file = new File("C:\\Users\\takih\\Documents\\GitHub\\Graph-Reconstruction-Conjecture\\file_to_obj.txt");
+        File file = new File("file_to_obj.txt");
         Scanner sc = new Scanner(file);
         
         //declare
@@ -37,7 +36,7 @@ public static void main(String[] args)throws Exception{
         }
 
         
-        //prinbt out the array 
+        //print out the array 
         System.out.println('\n'+"");
         for(i = 0; i < 4; i++){
             for(j = 0; j < 4; j++){
@@ -47,7 +46,7 @@ public static void main(String[] args)throws Exception{
             System.out.println('\n');
         }
 
-        Graph sampleGraph = new Graph(array);
+        //Graph sampleGraph = new Graph(array);
 
     }
 }
