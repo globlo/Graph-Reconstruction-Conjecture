@@ -35,30 +35,43 @@ public class Deck {
     }
 
     //Gets the degree sequence of deck
-    public int[] getDegreeSequenceOfDeck(Deck deckToRead) {
-         int[] degreeSequence = new int[deckToRead.deckArr.length];
-		 int degreeCounter;
-		 int totalNumberOfEdges = 0;
-
-		 for (int row = 0; row < deckToRead.deckArr.length; row++) {
-			 for (int col = 0; col < deckToRead.deckArr.length; col++) {
-				 if (deckToRead.deckArr[row].adjMat[row][col] != 0) {
-					 totalNumberOfEdges++;
-				 }
-			 }
-		}
-		totalNumberOfEdges = totalNumberOfEdges / 2;
-
-		for (int row = 0; row < deckToRead.deckArr.length; row++) {
-			 degreeCounter = 0;
-			 for (int col = 0; col < deckToRead.deckArr.length; col++) {
-				 if (deckToRead.deckArr[row].adjMat[row][col] == 1) {
-					 degreeCounter++;
-				 }
-			 }
-			 degreeSequence[row] = totalNumberOfEdges - degreeCounter;
-		}
-
+    public static int[] getDegreeSequenceOfOriginalGraphFromDeck(Deck deckToRead) {
+        int[] degreeSequence = new int[deckToRead.numberOfCards];
+        int originalGraphNumberOfEdges = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToRead);
+        for (int i = 0; i < degreeSequence.length; i++) {
+            degreeSequence[i] = originalGraphNumberOfEdges - deckToRead.deckArr[i].numberOfEdges;
+        }
         return degreeSequence;
-     }
+    }
+
+    //Determines if two decks contain the same set of cards
+    public static boolean areTheseDecksIdentical(Deck leftDeck, Deck rightDeck) {
+        boolean decksAreIdentical = true;
+        boolean leftCardMatchFound = false;
+        int[] usedRightDeckCards = new int[rightDeck.numberOfCards];
+        MiscTools.setArrayToZeros(usedRightDeckCards);
+        //First do the easy check, are the decks the same size
+        if (leftDeck.numberOfCards == rightDeck.numberOfCards) {
+            //Then iterate through the left deck card by card, looking for an identical card in the right deck
+            for (int leftDeckCardIndex = 0; leftDeckCardIndex < leftDeck.numberOfCards; leftDeckCardIndex++) {
+                leftCardMatchFound = false;
+                for (int rightDeckCardIndex = 0; rightDeckCardIndex < rightDeck.numberOfCards; rightDeckCardIndex++) {
+                    //If we haven't found a match for our current left deck card & we haven't used our current right deck card
+                    if (leftCardMatchFound != true && usedRightDeckCards[rightDeckCardIndex] == 0) {
+                        //Then check for a match at the current index of our right deck
+                        if (GraphLookerAtter.areGraphsIsomorphic(leftDeck.deckArr[leftDeckCardIndex], rightDeck.deckArr[rightDeckCardIndex]) == true) {
+                            leftCardMatchFound = true;
+                            usedRightDeckCards[rightDeckCardIndex] = 1;
+                        }
+                    }
+                }
+                //If we iterated through all right cards and couldn't find a match for the left card, return false
+                if (leftCardMatchFound == false) {
+                    decksAreIdentical = false;
+                    return decksAreIdentical;
+                }
+            }
+        }
+        return decksAreIdentical;
+    }
 }

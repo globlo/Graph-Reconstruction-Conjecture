@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 //GRC Project
 //Graph.java
 
@@ -27,6 +29,16 @@ public class Graph {
             numberOfEdges = 0;
             degreeSequence = trivialDegreeSequence;
         }
+    }
+
+    //If no adjacency matrix is passed to the constructor, create the trivial graph
+    public Graph() {
+        int[][] trivialGraphMatrix = {{0}};
+        int[] trivialDegreeSequence = {0};
+        adjMat = trivialGraphMatrix;
+        graphOrder = 1;
+        numberOfEdges = 0;
+        degreeSequence = trivialDegreeSequence;
     }
 
     //Checks if a graph's adjacency matrix is valid. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
@@ -158,30 +170,36 @@ public class Graph {
                 }
             }
         }
-        //Connect the new vertex to the given vertices 
-        for(int i = 0; i < verticesToConnect.length; i++){ 
+        //Connect the new vertex to the given vertices
+        for(int i = 0; i < verticesToConnect.length; i++){
             newAdjMat[originalGraphOrder][verticesToConnect[i]] = 1;
             newAdjMat[verticesToConnect[i]][originalGraphOrder] = 1;
         }
         Graph graphToReturn = new Graph(newAdjMat);
         return graphToReturn;
     }
-  
-    //return binary with 0 or 1 for each index 
-    public static int[] calculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
-        int [] current_sequence = new int[graph[0].length];
-        int [] vertexes_missed_sequeence = new int[graph[0].length];  //change later
+    
+    //return binary with 0 or 1 for each index
+    public static int[] calculateVerticesThatMightNeedAnEdge(Graph graphInput, int[] expectedDegreeSequence) {
+        int[][] graphInputAdjMat = graphInput.adjMat;
+        int[] graphInputDegreeSequence = graphInput.degreeSequence.clone();
+
+        int[] tmpSeq = expectedDegreeSequence.clone();
+        Arrays.sort(tmpSeq);
+        //Since the expected degree sequence copy is now sorted, we can expect the largest degree to be in the last position of tmpSeq
+        int maxPossibleDegree = tmpSeq[tmpSeq.length - 1];
+
+        int[] verticesMissedSequence = new int[graphInputAdjMat.length];
+
         //calculate the current sequence in the graph
-        for (int i = 0; i < graph.length; i++) {
-            for (int j = 0; j < graph.length; j++) {
-                current_sequence[i] += graph[i][j];
-            }
-            System.out.print(current_sequence[i]);
-            //find the vertex that misses edges 
-            if(current_sequence[i] < ExpectedDegreeSequence[i]) {
-                vertexes_missed_sequeence[i] = 1;
+        for (int i = 0; i < graphInputAdjMat.length; i++) {
+            //find the vertex that misses edges
+            if (graphInputDegreeSequence[i] < maxPossibleDegree) {
+                verticesMissedSequence[i] = 1;
+            } else {
+                verticesMissedSequence[i] = 0;
             }
         }
-        return vertexes_missed_sequeence;
+        return verticesMissedSequence;
     }
 }
