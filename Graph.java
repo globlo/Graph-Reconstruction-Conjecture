@@ -135,6 +135,7 @@ public class Graph {
         outputFile.close();
     }
 
+<<<<<<< Updated upstream
     //Gets the degree sequence of graph
     public int[] getDegreeSequenceOfGraph(int[][] graph) throws IOException {
 	    int[] degreeSequence = new int[graph.length];
@@ -176,6 +177,17 @@ public class Graph {
         for(i=0; i< graph.length; i++){
             for(j=0; j< graph.length; j++){
                 new_graph[i][j] = graph[i][j];
+=======
+    public int[] getDegreeSequence(int[][] graph) {
+        int[] degreeSequence = new int[graph.length];
+        for (int i = 0; i < graph[0].length; i++) {
+            int counter = 0;
+            for (int j = 0; j < graph[0].length; j++) {
+                if (graph[i][j] == 1) {
+                    counter++;
+                }
+                degreeSequence[i] = counter;
+>>>>>>> Stashed changes
             }
         }
 
@@ -209,4 +221,17 @@ public class Graph {
         }
         return vertexes_missed_sequeence;
     }
+<<<<<<< Updated upstream
+=======
+
+    public int[] getDegreeSequence(Graph[] deck) {
+        int[] degreeSequence = new int[deck.length];
+        for (int i = 0; i < deck.length; i++) {
+                degreeSequence[i] = deck[i].adjMat;
+            }
+        }
+        return degreeSequence;
+    }
+}
+>>>>>>> Stashed changes
 }
