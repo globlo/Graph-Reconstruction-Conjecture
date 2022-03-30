@@ -35,8 +35,30 @@ public class Deck {
     }
 
     //Gets the degree sequence of deck
-    // public int[] getDegreeSequenceOfDeck(Deck deckToRead) {
-    //     int[] degreeSequence = 
-    //     return degreeSequence;
-    // }
+    public int[] getDegreeSequenceOfDeck(Deck deckToRead) {
+         int[] degreeSequence = new int[deckToRead.deckArr.length];
+		 int degreeCounter;
+		 int totalNumberOfEdges = 0;
+
+		 for (int row = 0; row < deckToRead.deckArr.length; row++) {
+			 for (int col = 0; col < deckToRead.deckArr.length; col++) {
+				 if (deckToRead.deckArr[row].adjMat[row][col] != 0) {
+					 totalNumberOfEdges++;
+				 }
+			 }
+		}
+		totalNumberOfEdges = totalNumberOfEdges / 2;
+
+		for (int row = 0; row < deckToRead.deckArr.length; row++) {
+			 degreeCounter = 0;
+			 for (int col = 0; col < deckToRead.deckArr.length; col++) {
+				 if (deckToRead.deckArr[row].adjMat[row][col] == 1) {
+					 degreeCounter++;
+				 }
+			 }
+			 degreeSequence[row] = totalNumberOfEdges - degreeCounter;
+		}
+
+        return degreeSequence;
+     }
 }
