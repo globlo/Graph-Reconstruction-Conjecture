@@ -134,9 +134,7 @@ public class Graph {
             }
             degreeSequence[row] = degreeCounter;
         }
-        degreeSequence[i] = counter;
-      }
-      return degreeSequence;
+        return degreeSequence;
     }
 
     //Creates a new graph object by duplicating the passed in graph, then adding an extra vertex with edges given by verticesToConnect
