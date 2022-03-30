@@ -14,9 +14,9 @@ public class GRC {
         sampleGraph_1.printGraph();
 
         //Testing file input
-        sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
-        System.out.println("Sample Graph from file:");
-        sampleGraph_1.printGraph();
+        // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
+        // System.out.println("Sample Graph from file:");
+        // sampleGraph_1.printGraph();
 
         //Testing Deck Generation
         // Deck sampleDeck = Deck.createDeck(sampleGraph_1);
@@ -35,37 +35,46 @@ public class GRC {
         // System.out.println("Sample Graph with new vertex connected to vertices 0 and 2:");
         // sampleGraph_4.printGraph();
 
+        //Testing generation of all possible vertex mappings
+        // int[][] list = GraphLookerAtter.generateAllPossibleMaps(4);
+        // System.out.println("Generated " + list.length + " permutations.");
+        // for (int i = 0; i < list.length; i++) {
+        //     for (int j = 0; j < list[i].length; j++) {
+        //         System.out.print(list[i][j]);
+        //     }
+        //     System.out.println();
+        // }
 
+        //Testing generation of combinations n choose r
+        // int[][] combinationsList = CombinatoricsTools.generateCombinations(5,2);
+        // System.out.println("Generated " + combinationsList.length + " combinations.");
+        // for (int i = 0; i < combinationsList.length; i++) {
+        //     for (int j = 0; j < combinationsList[i].length; j++) {
+        //         System.out.print(combinationsList[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+
+        //Testing isomorphism checking. sampleMatrix_1 and sampleMatrix_2 should be isomorphic to eachother, while sampleMatrix_3 is not isomorphic to any other
         // int[][] sampleMatrix_2 = {  {0,1,1,1},
         //                             {1,0,1,0},
         //                             {1,1,0,1},
         //                             {1,0,1,0}};
         // Graph sampleGraph_2 = new Graph(sampleMatrix_2);
-
         // int[][] sampleMatrix_3 = {  {0,1,0,1},
         //                             {1,0,1,0},
         //                             {0,1,0,1},
         //                             {1,0,1,0}};
         // Graph sampleGraph_3 = new Graph(sampleMatrix_3);
-
-        // int[] sampleMap = {2,3,4,1};
-        // if (GraphLookerAtter.checkAdjacenciesAcrossMap(sampleGraph_1, sampleGraph_2, sampleMap)) {
+        // if (GraphLookerAtter.areGraphsIsomorphic(sampleGraph_1, sampleGraph_2) == true) {
         //     System.out.println("Sample Graphs 1 & 2 are isomorphic");
         // }else{
         //     System.out.println("Sample Graphs 1 & 2 are NOT isomorphic");
         // }
-        // if (GraphLookerAtter.checkAdjacenciesAcrossMap(sampleGraph_1, sampleGraph_3, sampleMap)) {
+        // if (GraphLookerAtter.areGraphsIsomorphic(sampleGraph_1, sampleGraph_3)) {
         //     System.out.println("Sample Graphs 1 & 3 are isomorphic");
         // }else{
         //     System.out.println("Sample Graphs 1 & 3 are NOT isomorphic");
-        // }
-        // int[][] list = GraphLookerAtter.generateAllPossibleMaps(4);
-        // System.out.println("Generated " + list.length + " permutations.");
-        // for (int i = 0; i < list.length; i++) {
-        //     for (int j = 0; j < list[i].length; j++) {
-        //         System.out.print(list[i][j]);        
-        //     }
-        //     System.out.println();
         // }
     }
 
@@ -76,8 +85,15 @@ public class GRC {
 
     //Reconstruct a graph from a given deck
     public static Graph reconstructGraph(Deck deckToReconstructFrom) {
+        int calculatedVertexCount = deckToReconstructFrom.numberOfCards;
+        int calculatedEdgeCount = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToReconstructFrom);
+        //int[] calculatedDegreeSequence = 
+        Graph cardWeReconstructFrom = deckToReconstructFrom.deckArr[0];
+        
+        
         Graph reconstructedGraph = new Graph(new int[deckToReconstructFrom.numberOfCards][deckToReconstructFrom.numberOfCards]);
         //Reconstruction stuff goes here
+        
         return reconstructedGraph;
     }
 }

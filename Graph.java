@@ -158,15 +158,15 @@ public class Graph {
                 }
             }
         }
-        //Connect the new vertex to the given vertices 
-        for(int i = 0; i < verticesToConnect.length; i++){ 
+        //Connect the new vertex to the given vertices
+        for(int i = 0; i < verticesToConnect.length; i++){
             newAdjMat[originalGraphOrder][verticesToConnect[i]] = 1;
             newAdjMat[verticesToConnect[i]][originalGraphOrder] = 1;
         }
         Graph graphToReturn = new Graph(newAdjMat);
         return graphToReturn;
     }
-  
+    
     //return binary with 0 or 1 for each index 
     public static int[] calculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
         int [] current_sequence = new int[graph[0].length];

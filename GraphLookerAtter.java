@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class GraphLookerAtter {
     
     //Compares adjacencies for each vertex between two graphs by using the vertex mapping passed for rightGraph
@@ -12,15 +10,10 @@ public class GraphLookerAtter {
     //Will return true since shifting the ordering of RightGraph's rows and columns to match the mapping will result in the same matrix as LeftGraph
     public static boolean checkAdjacenciesAcrossMap(Graph leftGraph, Graph rightGraph, int[] Mapping) {
         boolean adjacenciesHold = true;
-        //Create a temporary copy of Mapping with all values subtracted by 1 so they can be easily used for indexing
-        int[] tmpMap = new int[Mapping.length];
-        for (int i = 0; i < tmpMap.length; i++) {
-            tmpMap[i] = Mapping[i] - 1;
-        }
         //Iterate through every vertex
         for (int i = 0; i < Mapping.length; i++) {
             for (int j = 0; j < Mapping.length; j++) {
-                if (leftGraph.adjMat[i][j] != rightGraph.adjMat[tmpMap[i]][tmpMap[j]]) {
+                if (leftGraph.adjMat[i][j] != rightGraph.adjMat[Mapping[i]][Mapping[j]]) {
                     adjacenciesHold = false;
                 }
             }
@@ -39,35 +32,33 @@ public class GraphLookerAtter {
         return edgeCount;
     }
 
-    
-
-    //Create ALL possible mappings between two graphs
-    public static int[][] generateAllPossibleMaps(int orderOfGraph) {
-        
-        ArrayList<int[]> mappingList = new ArrayList<int[]>();
-        int[][] finalMapList = new int[MiscTools.getFactorial(orderOfGraph)][orderOfGraph];
-        //Initialize integerList to be used for map generation
-        int[] baseMap = new int[orderOfGraph];
-          
-        int tmpCounter = 1;
-        for (int i = 0; i < baseMap.length; i++) {
-            baseMap[i] = tmpCounter;
-            tmpCounter++;
-        }
-
-        //Fill mappingList with all permutations
-        CombinatoricsTools.permutationGenerator(baseMap, 0, mappingList);
-        //Convert mappingList to int matrix
-        for(int i = 0; i < finalMapList.length; i++) {
-            for (int j = 0; j < finalMapList[i].length; j++) {
-                finalMapList[i][j] = (int)mappingList.get(i)[j];
+    //Checks if an isomorphism exists between two graphs
+    public static boolean areGraphsIsomorphic(Graph leftGraph, Graph rightGraph) {
+        boolean graphsAreIsomorphic = false;
+        //First check all the easy requirements for isomorphism
+        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            //Then check every possible vertex mapping between the two graphs (n! possibilities yipee!)
+            int[][] mappingList = CombinatoricsTools.generateAllPossibleMaps(leftGraph.graphOrder);
+            for (int i = 0; i < mappingList.length; i++) {
+                graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
+                //If at any point we find a valid mapping, then return true
+                if (graphsAreIsomorphic == true) {
+                    System.out.println("Isomorphism found between:");
+                    leftGraph.printGraph();
+                    System.out.println("and:");
+                    rightGraph.printGraph();
+                    System.out.print("With vertex mapping: [");
+                    for (int j = 0; j < mappingList[i].length; j++) {
+                        if (j == mappingList[i].length - 1) {
+                            System.out.println(mappingList[i][j] + "]");
+                        } else {
+                            System.out.print(mappingList[i][j] + ",");
+                        }
+                    }
+                    return graphsAreIsomorphic;
+                }
             }
         }
-        mappingList.clear();
-        return finalMapList;
+        return graphsAreIsomorphic;
     }
-
-
-
-    
 }
