@@ -5,6 +5,17 @@ import java.util.Scanner;
 
 //FileReader stores all of our functions related to reading in a graph or deck from a .txt file
 public class FileReader {
+
+    public static String [] ifNextLineHasSpace(String line) {
+
+        if(line.contains(" ")){
+            return line.split(" ");
+        }
+        else{
+            return line.split("");    
+        }
+
+    }
     //Reads the adjacency matrix of a given file, then returns the Graph object represented by that matrix
     public static Graph readGraphFromFile(String filename) {
         Graph graphToReturn;
@@ -16,8 +27,8 @@ public class FileReader {
             String[] st;
         
             //Get the first line to get the size of matrixes
-            String line = sc.nextLine();	
-            st = line.split(" ");
+            //String line = ;	
+            st = ifNextLineHasSpace(sc.nextLine());
             size = st.length;
             adjacencyMatrix = new int[size][size];
         
@@ -27,8 +38,7 @@ public class FileReader {
                     adjacencyMatrix[i][j] = Integer.parseInt(st[j]);
                 }
                 if (sc.hasNextLine()) {
-                    line = sc.nextLine();	
-                    st = line.split(" ");
+                    st = ifNextLineHasSpace(sc.nextLine()); 
                 }
             }
             sc.close();
