@@ -30,4 +30,11 @@ public class MiscTools {
             }
         }
     }
+
+    //Sets all elements of an array to zero
+    public static void setArrayToZeros(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = 0;
+        }
+    }
 }

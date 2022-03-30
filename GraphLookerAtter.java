@@ -43,18 +43,6 @@ public class GraphLookerAtter {
                 graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
                 //If at any point we find a valid mapping, then return true
                 if (graphsAreIsomorphic == true) {
-                    System.out.println("Isomorphism found between:");
-                    leftGraph.printGraph();
-                    System.out.println("and:");
-                    rightGraph.printGraph();
-                    System.out.print("With vertex mapping: [");
-                    for (int j = 0; j < mappingList[i].length; j++) {
-                        if (j == mappingList[i].length - 1) {
-                            System.out.println(mappingList[i][j] + "]");
-                        } else {
-                            System.out.print(mappingList[i][j] + ",");
-                        }
-                    }
                     return graphsAreIsomorphic;
                 }
             }
