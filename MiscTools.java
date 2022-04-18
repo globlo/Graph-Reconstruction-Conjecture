@@ -37,4 +37,14 @@ public class MiscTools {
             array[i] = 0;
         }
     }
+
+    //Determines if we should use the card with the most missing edges or the least missing edges
+    //If a graph has a highly connected vertex, using the most missing edges might reduce possible combinations
+    public static boolean shouldWeUseCardWithMostMissingEdges(int numberOfCardVertices, int leastMissingEdges, int mostMissingEdges) {
+        int differenceBetweenMostAndNumberOfCards = numberOfCardVertices - mostMissingEdges;
+        if (differenceBetweenMostAndNumberOfCards < leastMissingEdges) {
+            return true;
+        }
+        return false;
+    }
 }

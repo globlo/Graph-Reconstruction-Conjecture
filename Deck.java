@@ -8,7 +8,7 @@ public class Deck {
     public final Graph[] deckArr;
     public final int numberOfCards;
     
-    //Constructor for a Deck. 
+    //Constructor for a Deck.
     public Deck(Graph[] deckArray) {
         deckArr = deckArray;
         numberOfCards = deckArr.length;
@@ -78,7 +78,7 @@ public class Deck {
     //Performs easy checks to see if the passed deck comes from a legitemate graph
     //Failing this test means the deck is certainly illegitemate
     //Passing this test doesn't mean the deck IS legitemate, just that it might be
-    public static boolean doesDeckLookLegitemate(Deck deckToTest) {
+    public static boolean doesDeckLookLegitimate(Deck deckToTest) {
         for (int i = 0; i < deckToTest.numberOfCards; i++) {
             //Each card in a deck must have a vertex count of numberOfCards - 1
             if (deckToTest.deckArr[i].graphOrder != (deckToTest.numberOfCards - 1)) {
@@ -114,13 +114,25 @@ public class Deck {
         return currentMinimumCardIndex;
     }
     
-    //Determines if we should use the card with the most missing edges or the least missing edges
-    //If a graph has a highly connected vertex, using the most missing edges might reduce possible combinations
-    public static boolean shouldWeUseCardWithMostMissingEdges(int numberOfCardVertices, int leastMissingEdges, int mostMissingEdges) {
-        int differenceBetweenMostAndNumberOfCards = numberOfCardVertices - mostMissingEdges;
-        if (differenceBetweenMostAndNumberOfCards < leastMissingEdges) {
-            return true;
+    //Find the card which will have the smallest amount of possible combinations
+    public static int pickBestCardForReconstruction(Deck deckToSearch) {
+        int bestCardIndex = -1;
+        //Get original edge count of graph
+        int originalEdgeCount = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToSearch);
+
+        //Find indexes of card with least and most missing edges
+        int leastMissingIndex = pickCardWithLeastMissingEdges(deckToSearch);
+        int mostMissingIndex = pickCardWithMostMissingEdges(deckToSearch);
+
+        //Get actual amount of edges missing from each of the previous two cards
+        int LeastMissingEdges = originalEdgeCount - deckToSearch.deckArr[leastMissingIndex].numberOfEdges;
+        int mostMissingEdges = originalEdgeCount - deckToSearch.deckArr[mostMissingIndex].numberOfEdges;
+
+        if (MiscTools.shouldWeUseCardWithMostMissingEdges(deckToSearch.deckArr[0].graphOrder, LeastMissingEdges, mostMissingEdges)) {
+            bestCardIndex = mostMissingIndex;
+        } else {
+            bestCardIndex = leastMissingIndex;
         }
-        return false;
+        return bestCardIndex;
     }
 }
