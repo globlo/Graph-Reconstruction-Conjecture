@@ -1,0 +1,10 @@
+Here's a place for us to store notes/questions as we come across them.
+
+Michael's Notes
+In MiscTools.compareSequence, we use Arrays.sort() which uses quicksort O(n logn). Since we're strictly dealing with integers, it might be nice to find/implement our own counting sort O(n)
+Possibly change createGraphWithNewVertex to non-static to reduce call stack size
+
+
+Aki's Notes
+
+Aakanksha's Notes

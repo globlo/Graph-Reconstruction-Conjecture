@@ -1,24 +1,49 @@
-public class Graph {
-    public int[][] adjMat;
-    public int graphOrder = 1;
-    public int numberOfEdges = 0;
+import java.util.Arrays;
 
-    //Constructor for graph
+//GRC Project
+//Graph.java
+
+//The Graph object is used to represent graphs throughout our program
+//The graphs are represented by adjacency matrices of integers and also seperately store their order (number of vertices), number of edges, and degree sequence
+//We do not allow a graph to be changed after it has been created
+public class Graph {
+    public final int[][] adjMat;
+    public final int graphOrder;
+    public final int numberOfEdges;
+    public final int[] degreeSequence;
+
+    //Constructor for graph. Automatically checks if the passed in adjacency matrix is legitemate
+    //If the graph is legitemate, store it, then calculate it's order and edges. If it is not, then instead create the trivial graph to aid with debugging
     public Graph(int[][] adjacencyMatrix) {
         if (isMatrixValid(adjacencyMatrix) == true) {
             adjMat = adjacencyMatrix;
             graphOrder = adjMat[0].length;
             numberOfEdges = countNumerOfEdgesInGraph();
+            degreeSequence = calculateDegreeSequence();
         } else {
-            //If the graph is invalid, create single vertex graph instead to not break things too much
-            int[][] singleVertexGraphMatrix = {{0}};
-            adjMat = singleVertexGraphMatrix;
+            //If the graph is invalid, create trivial graph instead to not break things *too much*
+            int[][] trivialGraphMatrix = {{0}};
+            int[] trivialDegreeSequence = {0};
+            adjMat = trivialGraphMatrix;
+            graphOrder = 1;
+            numberOfEdges = 0;
+            degreeSequence = trivialDegreeSequence;
         }
     }
 
-    //Checks if a graph's adjacency matrix is valid.
-    //This means it's adjacency matrix should be square, mirrored, and it's diaganols should all be zero
-    public static boolean isMatrixValid(int[][] matrixToCheck) {
+    //If no adjacency matrix is passed to the constructor, create the trivial graph
+    public Graph() {
+        int[][] trivialGraphMatrix = {{0}};
+        int[] trivialDegreeSequence = {0};
+        adjMat = trivialGraphMatrix;
+        graphOrder = 1;
+        numberOfEdges = 0;
+        degreeSequence = trivialDegreeSequence;
+    }
+
+    //Checks if a graph's adjacency matrix is valid. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
+    //This means it's adjacency matrix should be square, mirrored, edge weights of only 1, and it's diaganols should all be zero
+    private static boolean isMatrixValid(int[][] matrixToCheck) {
         boolean graphIsLegit = true;
         //First check that the matrix rows and columns are the same length
         if (matrixToCheck.length != matrixToCheck[0].length) {
@@ -32,14 +57,19 @@ public class Graph {
                     //If a graph doesn't have a matching value across it's diaganol, marks as illegitemate
                     if (matrixToCheck[row][col] != matrixToCheck[col][row]) {
                         graphIsLegit = false;
-                        System.out.println("Attempted to create graph using matrix that isn't mirrored");
+                        System.out.println("Attempted to create a directed graph");
                     }
                     //Check that diaganols are zero
                     if (row == col) {
                         if (matrixToCheck[row][col] != 0) {
-                            System.out.println("Attempted to create graph using matrix with non-zero diaganol");
                             graphIsLegit = false;
+                            System.out.println("Attempted to create graph with self connected vertex");
                         }
+                    }
+                    //Finally check that no values other than 0 or 1 are present
+                    if (matrixToCheck[row][col] != 0 && matrixToCheck[row][col] != 1) {
+                        graphIsLegit = false;
+                        System.out.println("Attempted to create a weighted graph");
                     }
                 }
             }
@@ -47,11 +77,11 @@ public class Graph {
         return graphIsLegit;
     }
 
-    //Print contents of adjacency matrix
+    //Print contents of a graphs adjacency matrix
     public void printGraph() {
-        for (int i = 0; i < adjMat[0].length; i++) {
-            for (int j = 0; j < adjMat[0].length; j++) {
-                System.out.print(adjMat[i][j]);
+        for (int row = 0; row < adjMat[0].length; row++) {
+            for (int col = 0; col < adjMat[0].length; col++) {
+                System.out.print(adjMat[row][col]);
             }
             System.out.println();
         }
@@ -88,28 +118,9 @@ public class Graph {
         return graphToReturn;
     }
 
-    //Create full deck of subgraphs from given graph    
-    public static Deck createDeck(Graph originalGraph) {
-        Graph[] deckArr = new Graph[originalGraph.graphOrder];
-        Deck deckToReturn;
-        for (int i = 0; i < originalGraph.graphOrder; i++) {
-            deckArr[i] = Graph.creatSubgraphWithRemovedVertex(originalGraph, i);
-        }
-        deckToReturn = new Deck(deckArr);
-        return deckToReturn;
-    }
-
-    //Set an adjacency matrix to all zeros
-    public void initializeGraphToZeros() {
-        for (int row = 0; row < adjMat.length; row++) {
-            for (int col = 0; col < adjMat.length; col++) {
-                adjMat[row][col] = 0;
-            }
-        }
-    }
-
-    //Count number of edges in a graph
-    public int countNumerOfEdgesInGraph() {
+    //Returns the number of edges in a graph
+    //Since this is ran at graph creation, and since graphs can't change, keep it private and just access the static variable numberOfEdges
+    private int countNumerOfEdgesInGraph() {
         int edgeCount = 0;
         for (int row = 0; row < graphOrder; row++) {
             for (int col = 0; col < graphOrder; col++) {
@@ -121,59 +132,75 @@ public class Graph {
         return edgeCount / 2;
     }
 
-
-    /*
-        Purpose: Save the graph object to the text file
-    */
-    public void printGraphToTextFile() throws IOException {
-
-        File file = new File("output.txt"); //Output file name where graph object will be saved
-        PrintWriter outputFile = new PrintWriter(file);
-
-        for (int i = 0; i < adjMat[0].length; i++) {
-            for (int j = 0; j < adjMat[0].length; j++) {
-                outputFile.print(adjMat[i][j]);
-            }
-            outputFile.println();
-        }
-        outputFile.close();
-    }
-
-    public int getDegreeSequence(int[][] graphOrDeck) {
-        int[] degreeSequence = new int[graphOrDeck.length];
-        for (int i = 0; i < graphOrDeck[0].length; i++) {
-            int counter = 0;
-            for (int j = 0; j < graphOrDeck[0].length; j++) {
-                if (graphOrDeck[i][j] == 1) {
-                    counter++;
+    //Returns the degree sequence of a graph, which is a list of the amount of edges connected to each vertex
+    //Since this is ran at graph creation, and since graphs can't change, keep it private and just access the static variable degreeSequence
+    private int[] calculateDegreeSequence() {
+        int[] degreeSequence = new int[graphOrder];
+        int degreeCounter;
+        for (int row = 0; row < graphOrder; row++) {
+            degreeCounter = 0;
+            for (int col = 0; col < graphOrder; col++) {
+                if (adjMat[row][col] == 1) {
+                    degreeCounter++;
                 }
-                degreeSequence[i] = counter;
             }
+            degreeSequence[row] = degreeCounter;
         }
         return degreeSequence;
     }
 
-
-    public static int [][] CreateGraphWithNewVertex(int[][] graph, int[] verteces_to_connect) {
-
-
-        //add/allocate new row & column with 0s (new vertex)
-        int [][] new_graph = new int[graph.length +1][graph.length +1];
-        int i, j;
-        for(i=0; i< graph.length; i++){
-            for(j=0; j< graph.length; j++){
-                new_graph[i][j] = graph[i][j];
+    //Creates a new graph object by duplicating the passed in graph, then adding an extra vertex with edges given by verticesToConnect
+    //verticesToConnect is defined as an array of vertices that the new vertex should be connected to
+    //For example, I want to add a vertex that's connected to original vertices 1 & 3 (Represented in adjMat as row/col 0 & 2), then I'll pass [0,2]
+    public static Graph createGraphWithNewVertex(Graph originalGraph, int[] verticesToConnect) {
+        int[][] originalAdjMat = originalGraph.adjMat;
+        int originalGraphOrder = originalGraph.graphOrder;
+        //Add new row & column to represent the new vertex
+        int[][] newAdjMat = new int[originalGraphOrder + 1][originalGraphOrder + 1];
+        //Copy over contents of original adjacency matrix
+        for(int row = 0; row < newAdjMat.length; row++){
+            for(int col = 0; col < newAdjMat.length; col++){
+                //If we're in either the last row or column of our new graph, set it to zero
+                if (col == originalGraphOrder || row == originalGraphOrder) {
+                    newAdjMat[row][col] = 0;
+                } else {
+                    //Otherwise simply copy over original matrix contents
+                    newAdjMat[row][col] = originalAdjMat[row][col];
+                    
+                }
             }
         }
-
-        //connect the new verteces to the given vertex 
-        for(i=0; i< verteces_to_connect.length; i++){ 
-            new_graph[graph.length][verteces_to_connect[i]-1] = 1;
-            new_graph[verteces_to_connect[i]-1][graph.length] = 1;
+        //Connect the new vertex to the given vertices
+        for(int i = 0; i < verticesToConnect.length; i++){
+            newAdjMat[originalGraphOrder][verticesToConnect[i]] = 1;
+            newAdjMat[verticesToConnect[i]][originalGraphOrder] = 1;
         }
+        Graph graphToReturn = new Graph(newAdjMat);
+        return graphToReturn;
+    }
+    
+    //return binary with 0 or 1 for each index
+    public static int[] calculateVerticesThatMightNeedAnEdge(Graph graphInput, int[] expectedDegreeSequence) {
+        int[][] graphInputAdjMat = graphInput.adjMat;
+        int[] graphInputDegreeSequence = graphInput.degreeSequence.clone();
 
-        return new_graph;
+        int[] tmpSeq = expectedDegreeSequence.clone();
+        Arrays.sort(tmpSeq);
+        //Since the expected degree sequence copy is now sorted, we can expect the largest degree to be in the last position of tmpSeq
+        int maxPossibleDegree = tmpSeq[tmpSeq.length - 1];
 
+        int[] verticesMissedSequence = new int[graphInputAdjMat.length];
+
+        //calculate the current sequence in the graph
+        for (int i = 0; i < graphInputAdjMat.length; i++) {
+            //find the vertex that misses edges
+            if (graphInputDegreeSequence[i] < maxPossibleDegree) {
+                verticesMissedSequence[i] = 1;
+            } else {
+                verticesMissedSequence[i] = 0;
+            }
+        }
+        return verticesMissedSequence;
     }
   
     //return binary with 0 or 1 for each index 
@@ -252,5 +279,3 @@ public class Graph {
     }
 >>>>>>> Stashed changes
 }
-}
-

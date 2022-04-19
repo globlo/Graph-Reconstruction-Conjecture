@@ -1,11 +1,10 @@
+//GRC Project
+//GRC.java
+
+//GRC is our main method class, experimentation and testing should occur here
 public class GRC {
     public static void main(String[] args) {
-<<<<<<< Updated upstream
-        int[][] sampleMatrix = {{0,1,0,1},
-                                {1,0,1,1},
-                                {0,1,0,1},
-                                {1,1,1,0}};
-=======
+
         //Generating simple Graphs and their decks
         int[][] sampleMatrix_1 = {  {0,1,0,1},
                                     {1,0,1,1},
@@ -26,9 +25,10 @@ public class GRC {
         Deck sampleDeck_2 = Deck.createDeck(sampleGraph_2);
         Deck sampleDeck_3 = Deck.createDeck(sampleGraph_3);
 
+
         //Testing Count # of cycle in Graph
-        int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
-        System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
+        //int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
+        //System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
 
         //Testing file input
         // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
@@ -46,47 +46,88 @@ public class GRC {
         // Graph sampleGraph_4 = Graph.createGraphWithNewVertex(sampleGraph_1, vertexListToAttachTo);
         // System.out.println("Sample Graph with new vertex connected to vertices 0 and 2:");
         // sampleGraph_4.printGraph();
->>>>>>> Stashed changes
 
-        Graph sampleGraph = new Graph(sampleMatrix);
-        System.out.println("Sample Graph:");
-        sampleGraph.printGraph();
-        System.out.print("Edges in sample graph:");
-        System.out.println(sampleGraph.numberOfEdges);
+        //Testing generation of all possible vertex mappings
+        // int[][] list = GraphLookerAtter.generateAllPossibleMaps(4);
+        // System.out.println("Generated " + list.length + " permutations.");
+        // for (int i = 0; i < list.length; i++) {
+        //     for (int j = 0; j < list[i].length; j++) {
+        //         System.out.print(list[i][j]);
+        //     }
+        //     System.out.println();
+        // }
 
-        Deck sampleDeck = Graph.createDeck(sampleGraph);
-        System.out.println("Sample Deck:");
-        sampleDeck.printDeck();
+        //Testing generation of combinations n choose r
+        // int[][] combinationsList = CombinatoricsTools.generateCombinations(5,2);
+        // System.out.println("Generated " + combinationsList.length + " combinations.");
+        // for (int i = 0; i < combinationsList.length; i++) {
+        //     for (int j = 0; j < combinationsList[i].length; j++) {
+        //         System.out.print(combinationsList[i][j]);
+        //     }
+        //     System.out.println();
+        // }
 
-        System.out.print("Edges in sample graph determined by deck:");
-        System.out.println(countNumberOfEdgesInOriginalGraph(sampleDeck));
+        //Testing isomorphism checking. sampleMatrix_1 and sampleMatrix_2 should be isomorphic to eachother, while sampleMatrix_3 is not isomorphic to any other
+        // if (GraphLookerAtter.areGraphsIsomorphic(sampleGraph_1, sampleGraph_2) == true) {
+        //     System.out.println("Sample Graphs 1 & 2 are isomorphic");
+        // }else{
+        //     System.out.println("Sample Graphs 1 & 2 are NOT isomorphic");
+        // }
+        // if (GraphLookerAtter.areGraphsIsomorphic(sampleGraph_1, sampleGraph_3)) {
+        //     System.out.println("Sample Graphs 1 & 3 are isomorphic");
+        // }else{
+        //     System.out.println("Sample Graphs 1 & 3 are NOT isomorphic");
+        // }
 
+
+        //Testing Deck comparisons
+        //Since Sample Graph 1 & 2 are isomorphic, they should be considered identical. Since Sample graph 3 is not isomorphic to 1 or 2, it should return false
+        // if (Deck.areTheseDecksIdentical(sampleDeck_1, sampleDeck_2) == true) {
+        //     System.out.println("Decks 1 & 2 are identical");
+        // }else{
+        //     System.out.println("Decks 1 & 2 are NOT identical");
+        // }
+        // if (Deck.areTheseDecksIdentical(sampleDeck_1, sampleDeck_3) == true) {
+        //     System.out.println("Decks 1 & 3 are identical");
+        // }else{
+        //     System.out.println("Decks 1 & 3 are NOT identical");
+        // }
+
+        System.out.println("Attempting to reconstruct graph from following deck:");
+        sampleDeck_1.printDeck();
+        reconstructGraph(sampleDeck_1);
     }
 
-    //Reconstruct a graph after first turning it into a deck, then back into a graph
+    //Reconstruct a graph by creating a deck then calling graph reconstruction function with a deck instead
     public static void reconstructGraph(Graph graphToReconstruct) {
-        Deck deckToReconstruct = Graph.createDeck(graphToReconstruct);
-        Graph reconstructedGraph = reconstructGraph(deckToReconstruct);
-        graphToReconstruct.printGraph();
-        reconstructedGraph.printGraph();
+        reconstructGraph(Deck.createDeck(graphToReconstruct));
     }
 
     //Reconstruct a graph from a given deck
     public static Graph reconstructGraph(Deck deckToReconstructFrom) {
-        Graph reconstructedGraph = new Graph(new int[deckToReconstructFrom.numberOfCards][deckToReconstructFrom.numberOfCards]);
-        reconstructedGraph.initializeGraphToZeros();
-        //Reconstruction stuff goes here
-        return reconstructedGraph;
-    }
+        //Calculate original graphs Vertex count
+        int calculatedVertexCount = deckToReconstructFrom.numberOfCards;
+        //Calculate original graphs Edge count
+        int calculatedEdgeCount = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToReconstructFrom);
+        //Calculate original graphs degree sequence
+        int[] calculatedDegreeSequence = Deck.getDegreeSequenceOfOriginalGraphFromDeck(deckToReconstructFrom);
+        //Pick a card to reconstruct from
+        Graph cardWeReconstructFrom = deckToReconstructFrom.deckArr[0];
+        //Determine the number of edges missing from this card
+        int missingEdgeCount = calculatedEdgeCount - cardWeReconstructFrom.numberOfEdges;
 
-    //Return the number of edges in the original graph by using Kelly's lemma
-    //Original graph edge count = Total number of edges in deck divided by (number of cards - 2)
-    public static int countNumberOfEdgesInOriginalGraph(Deck deckToCountFrom) {
-        int edgeCount = 0;
-        for (int i = 0; i < deckToCountFrom.numberOfCards; i++) {
-            edgeCount += deckToCountFrom.deckArr[i].numberOfEdges;
+        //Try ALL combinations of graphs created by adding one vertex and attaching missingEdgeCount amount of edges to other vertices
+        int[][] possibleVerticesToConnectToList = CombinatoricsTools.generateCombinations(calculatedVertexCount - 1, missingEdgeCount);
+        for (int i = 0; i < possibleVerticesToConnectToList.length; i++) {
+            Graph attemptAtReconstruction = Graph.createGraphWithNewVertex(cardWeReconstructFrom, possibleVerticesToConnectToList[i]);
+            if (Deck.areTheseDecksIdentical(deckToReconstructFrom, Deck.createDeck(attemptAtReconstruction)) == true) {
+                System.out.println("Graph was reconstructed:");
+                attemptAtReconstruction.printGraph();
+                return attemptAtReconstruction;
+            }
         }
-        edgeCount = edgeCount / (deckToCountFrom.numberOfCards - 2);
-        return edgeCount;
+        System.out.println("Graph could not be reconstructed.");
+        Graph trivialGraph = new Graph();
+        return trivialGraph;
     }
 }
