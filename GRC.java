@@ -1,9 +1,52 @@
 public class GRC {
     public static void main(String[] args) {
+<<<<<<< Updated upstream
         int[][] sampleMatrix = {{0,1,0,1},
                                 {1,0,1,1},
                                 {0,1,0,1},
                                 {1,1,1,0}};
+=======
+        //Generating simple Graphs and their decks
+        int[][] sampleMatrix_1 = {  {0,1,0,1},
+                                    {1,0,1,1},
+                                    {0,1,0,1},
+                                    {1,1,1,0}};
+        int[][] sampleMatrix_2 = {  {0,1,1,1},
+                                    {1,0,1,0},
+                                    {1,1,0,1},
+                                    {1,0,1,0}};
+        int[][] sampleMatrix_3 = {  {0,1,0,1},
+                                    {1,0,1,0},
+                                    {0,1,0,1},
+                                    {1,0,1,0}};
+        Graph sampleGraph_1 = new Graph(sampleMatrix_1);
+        Graph sampleGraph_2 = new Graph(sampleMatrix_2);
+        Graph sampleGraph_3 = new Graph(sampleMatrix_3);
+        Deck sampleDeck_1 = Deck.createDeck(sampleGraph_1);
+        Deck sampleDeck_2 = Deck.createDeck(sampleGraph_2);
+        Deck sampleDeck_3 = Deck.createDeck(sampleGraph_3);
+
+        //Testing Count # of cycle in Graph
+        int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
+        System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
+
+        //Testing file input
+        // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
+        // System.out.println("Sample Graph from file:");
+        // sampleGraph_1.printGraph();
+
+        //Testing edge calculations
+        // System.out.print("Edges in sample graph:");
+        // System.out.println(sampleGraph_1.numberOfEdges);
+        // System.out.print("Edges in sample graph determined by deck: ");
+        // System.out.println(GraphLookerAtter.countNumberOfEdgesInOriginalGraph(sampleDeck));
+
+        //Testing creation of graph from card
+        // int[] vertexListToAttachTo = {0,2};
+        // Graph sampleGraph_4 = Graph.createGraphWithNewVertex(sampleGraph_1, vertexListToAttachTo);
+        // System.out.println("Sample Graph with new vertex connected to vertices 0 and 2:");
+        // sampleGraph_4.printGraph();
+>>>>>>> Stashed changes
 
         Graph sampleGraph = new Graph(sampleMatrix);
         System.out.println("Sample Graph:");
