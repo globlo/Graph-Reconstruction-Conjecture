@@ -4,6 +4,7 @@
 //GRC is our main method class, experimentation and testing should occur here
 public class GRC {
     public static void main(String[] args) {
+
         //Generating simple Graphs and their decks
         int[][] sampleMatrix_1 = {  {0,1,0,1},
                                     {1,0,1,1},
@@ -23,6 +24,11 @@ public class GRC {
         Deck sampleDeck_1 = Deck.createDeck(sampleGraph_1);
         Deck sampleDeck_2 = Deck.createDeck(sampleGraph_2);
         Deck sampleDeck_3 = Deck.createDeck(sampleGraph_3);
+
+
+        //Testing Count # of cycle in Graph
+        //int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
+        //System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
 
         //Testing file input
         // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");

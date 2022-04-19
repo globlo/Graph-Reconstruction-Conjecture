@@ -202,4 +202,80 @@ public class Graph {
         }
         return verticesMissedSequence;
     }
+  
+    //return binary with 0 or 1 for each index 
+    public static int []CalculateVerticesThatNeedAnEdge(int[][] graph, int[] ExpectedDegreeSequence) {
+
+        int [] current_sequence = new int[graph[0].length];
+        int [] vertexes_missed_sequeence = new int[graph[0].length];  //change later
+        int i, j, count=0;
+        
+        //calculate the current sequence in the graph
+        for(i=0; i< graph.length; i++){
+            for(j=0; j< graph.length; j++){
+                current_sequence[i] += graph[i][j];
+            }
+            System.out.print(current_sequence[i]);
+            //find the vertex that misses edges 
+            if(current_sequence[i] < ExpectedDegreeSequence[i]) {
+                vertexes_missed_sequeence[i] = 1;
+            }
+        }
+
+        return vertexes_missed_sequeence;
+    }
+
+<<<<<<< Updated upstream
+=======
+
+
+    public static int count = 0;  
+    public static void DFS(int graph[][], boolean marked[],
+                    int n, int vert, int start) {
+        
+        int V = graph[0].length;
+        // mark the vertex vert as visited
+        marked[vert] = true;
+
+        // if the path of length (n-1) is found
+        if (n == 0) {
+            marked[vert] = false;   
+            // Check if vertex vert end
+            // with vertex start
+            if (graph[vert][start] == 1) {
+                count++;
+                return;
+            } else
+                return;
+        }
+         
+        // searching every possible path of length n-1
+        for (int i = 0; i < V; i++){
+            if (!marked[i] && graph[vert][i] == 1){
+                DFS(graph, marked, n-1, i, start);
+            }
+        }    
+                
+        // marking vert as unvisited to make it
+        // usable again
+        marked[vert] = false;
+    }
+     
+    // Count cycles of length N (# of verteces "i.e. Tirangle: n=3") you want to find
+    public static int countCycles(int graph[][], int n) {
+         
+        int V = graph[0].length;
+        // all vertex are marked un-visited initially.
+        boolean marked[] = new boolean[V];
+        
+        // Searching for cycle by using v-n-1 vertices
+        // n-1 is the every possile path that 
+        for (int i = 0; i < V - (n - 1); i++) { //n-1 = 4 -> V=6 - 4 = 2
+            DFS(graph, marked, n-1, i, i);  
+            // ith vertex is marked as visited and will not be visited again
+            marked[i] = true;
+        }
+        return count / 2; //every vertex has duplicated path, right round or left round cycle
+    }
+>>>>>>> Stashed changes
 }
