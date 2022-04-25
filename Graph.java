@@ -225,9 +225,6 @@ public class Graph {
         return vertexes_missed_sequeence;
     }
 
-<<<<<<< Updated upstream
-=======
-
 
     public static int count = 0;  
     public static void DFS(int graph[][], boolean marked[],
@@ -277,5 +274,5 @@ public class Graph {
         }
         return count / 2; //every vertex has duplicated path, right round or left round cycle
     }
->>>>>>> Stashed changes
+
 }

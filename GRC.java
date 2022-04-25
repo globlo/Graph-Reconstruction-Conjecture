@@ -5,6 +5,9 @@
 public class GRC {
     public static void main(String[] args) {
 
+
+        long start_program_time = System.nanoTime();
+
         //Generating simple Graphs and their decks
         int[][] sampleMatrix_1 = {  {0,1,0,1},
                                     {1,0,1,1},
@@ -95,7 +98,16 @@ public class GRC {
 
         System.out.println("Attempting to reconstruct graph from following deck:");
         sampleDeck_1.printDeck();
+        long start_recunstruct_graph_time = System.nanoTime();
         reconstructGraph(sampleDeck_1);
+        long end_recunstruct_graph_time = System.nanoTime();
+
+        long end_program_time = System.nanoTime();
+        System.out.println("Program Start Time: "+ start_program_time + " nano sec");
+        System.out.println("Program End Time: "+ end_program_time + " nano sec");
+        System.out.println("Program Execution Time: "+ (end_program_time - start_program_time)+ " nano sec");
+        System.out.println("Graph Reconstruction Time: "+ (end_recunstruct_graph_time - start_recunstruct_graph_time)+ " nano sec");
+
     }
 
     //Reconstruct a graph by creating a deck then calling graph reconstruction function with a deck instead
