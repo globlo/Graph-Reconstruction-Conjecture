@@ -226,7 +226,6 @@ public class Graph {
     }
 
 
-
     public static int count = 0;  
     public static void DFS(int graph[][], boolean marked[],
                     int n, int vert, int start) {
@@ -275,4 +274,5 @@ public class Graph {
         }
         return count / 2; //every vertex has duplicated path, right round or left round cycle
     }
+
 }

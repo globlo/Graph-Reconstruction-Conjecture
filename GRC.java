@@ -5,6 +5,7 @@
 public class GRC {
     public static void main(String[] args) {
 
+
         long start_program_time = System.nanoTime();
 
         //Generating simple Graphs and their decks
