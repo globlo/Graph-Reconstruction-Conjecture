@@ -289,7 +289,7 @@ public class Graph {
         int half_matrix_size = ((graphRow_size-1) * graphRow_size) / 2;
         // Add extra bits that need to become power of 6 i.e. 10mod6 = 4, 6-4=2, 10+2=12  
         if(half_matrix_size % 6 > 0)
-            half_matrix_size = extrabits = half_matrix_size + 6 - (half_matrix_size % 6);
+            half_matrix_size += extrabits = 6 - (half_matrix_size % 6);
 
         // First char represent N size of matrix
         char[] ch = new char[1 + half_matrix_size/6];
