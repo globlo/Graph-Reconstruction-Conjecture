@@ -96,6 +96,25 @@ public class GRC {
         //     System.out.println("Decks 1 & 3 are NOT identical");
         // }
 
+
+        // Convert Matrix to ASCii Char
+        char[] converted_Chars = Graph.Matrix_to_ASCiiChar(sampleMatrix_3);
+        System.out.println("ASCii assign from matrix: ");
+        for(int i=0; i<converted_Chars.length; i++ )
+            System.out.print(converted_Chars[i]+ ", ");
+        
+        // Convert ASCii Char to Matrix
+        int [][] samp_matrix = Graph.ASCiiChar_to_Matrix(converted_Chars);
+        System.out.println("\nMatrix assign from ASCii char : ");
+        for(int i=0; i<samp_matrix[0].length; i++ ){
+            for(int j=0; j<samp_matrix[0].length; j++ ){
+
+            System.out.print(samp_matrix[i][j]+ " ");
+            }
+            System.out.println("");
+        }
+
+
         System.out.println("Attempting to reconstruct graph from following deck:");
         sampleDeck_1.printDeck();
         long start_recunstruct_graph_time = System.nanoTime();
