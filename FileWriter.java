@@ -32,4 +32,32 @@ public class FileWriter {
         }
         outputFile.close();
     }
+    
+   //Save the graph object to the text file in a Sage output format
+   //{0:[1,2,3], 4:[0,2], 6:[1,2,3,4,5]} This is a sample Sage output format
+   public static void writeSageFormatToFile(Graph graphToWrite){
+
+		try{
+			    StringBuilder str = new StringBuilder();
+				PrintWriter outputFile = new PrintWriter("SageFormatOutput.txt");
+				str.append("{");
+				for(int row = 0; row < graphToWrite.graphOrder; row++){
+					str.append(row + ":[");
+					for(int col = 0; col < graphToWrite.adjMat[row].length; col++){
+						if(graphToWrite.adjMat[row][col] == 1){
+							str.append(col + ",");
+						}
+					}
+					str.append("], ");
+				}
+				str.append("}");
+				String strFirst = str.toString().replace(",]", "]");
+				String strFinal = strFirst.replace(", }", "}");
+				outputFile.print(strFinal);
+				outputFile.close();
+			}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+   }
 }

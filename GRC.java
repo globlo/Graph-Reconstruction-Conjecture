@@ -5,6 +5,10 @@ import java.util.ArrayList;
 //GRC is our main method class, experimentation and testing should occur here
 public class GRC {
     public static void main(String[] args) {
+
+
+        long start_program_time = System.nanoTime();
+
         //Generating simple Graphs and their decks
         int[][] sampleMatrix_1 = {  {0,1,0,1},
                                     {1,0,1,1},
@@ -24,6 +28,11 @@ public class GRC {
         Deck sampleDeck_1 = Deck.createDeckFromGraph(sampleGraph_1);
         Deck sampleDeck_2 = Deck.createDeckFromGraph(sampleGraph_2);
         Deck sampleDeck_3 = Deck.createDeckFromGraph(sampleGraph_3);
+
+
+        //Testing Count # of cycle in Graph
+        //int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
+        //System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
 
         //Testing file input
         // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
@@ -87,7 +96,6 @@ public class GRC {
         // }else{
         //     System.out.println("Decks 1 & 3 are NOT identical");
         // }
-
 /* 
         //Testing for illegitemate deck
         Graph[] fakeDeck = {sampleGraph_3, sampleGraph_2, sampleGraph_1, sampleGraph_3};
@@ -103,5 +111,36 @@ public class GRC {
         // for (int i = 0; i < foundReconstructions.size(); i++) {
         //     foundReconstructions.get(i).printGraph();
         // }
+      
+              // Convert Matrix to ASCii Char
+        char[] converted_Chars = Graph.Matrix_to_ASCiiChar(sampleMatrix_3);
+        System.out.println("ASCii assign from matrix: ");
+        for(int i=0; i<converted_Chars.length; i++ )
+            System.out.print(converted_Chars[i]+ ", ");
+        
+        // Convert ASCii Char to Matrix
+        int [][] samp_matrix = Graph.ASCiiChar_to_Matrix(converted_Chars);
+        System.out.println("\nMatrix assign from ASCii char : ");
+        for(int i=0; i<samp_matrix[0].length; i++ ){
+            for(int j=0; j<samp_matrix[0].length; j++ ){
+
+            System.out.print(samp_matrix[i][j]+ " ");
+            }
+            System.out.println("");
+        }
+
+
+        System.out.println("Attempting to reconstruct graph from following deck:");
+        sampleDeck_1.printDeck();
+        long start_recunstruct_graph_time = System.nanoTime();
+        reconstructGraph(sampleDeck_1);
+        long end_recunstruct_graph_time = System.nanoTime();
+
+        long end_program_time = System.nanoTime();
+        System.out.println("Program Start Time: "+ start_program_time + " nano sec");
+        System.out.println("Program End Time: "+ end_program_time + " nano sec");
+        System.out.println("Program Execution Time: "+ (end_program_time - start_program_time)+ " nano sec");
+        System.out.println("Graph Reconstruction Time: "+ (end_recunstruct_graph_time - start_recunstruct_graph_time)+ " nano sec");
+
     }
 }
