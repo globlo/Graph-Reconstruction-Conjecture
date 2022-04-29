@@ -47,4 +47,40 @@ public class MiscTools {
         }
         return false;
     }
+
+    //Checks if an adjacency matrix represents a valid graph. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
+    //This means it's adjacency matrix should be square, mirrored, edge weights of only 1, and it's diaganols should all be zero
+    public static boolean isMatrixValidGraph(int[][] matrixToCheck) {
+        boolean graphIsLegit = true;
+        //First check that the matrix rows and columns are the same length
+        if (matrixToCheck.length != matrixToCheck[0].length) {
+            System.out.println("Attempted to create graph using matrix with invalid dimensions");
+            graphIsLegit = false;
+        } else {
+            //Iterate over rows
+            for (int row = 0; row < matrixToCheck.length; row++) {
+                //Iteratore over columns
+                for (int col = 0; col < matrixToCheck.length; col++) {
+                    //If a graph doesn't have a matching value across it's diaganol, marks as illegitemate
+                    if (matrixToCheck[row][col] != matrixToCheck[col][row]) {
+                        graphIsLegit = false;
+                        System.out.println("Attempted to create a directed graph");
+                    }
+                    //Check that diaganols are zero
+                    if (row == col) {
+                        if (matrixToCheck[row][col] != 0) {
+                            graphIsLegit = false;
+                            System.out.println("Attempted to create graph with self connected vertex");
+                        }
+                    }
+                    //Finally check that no values other than 0 or 1 are present
+                    if (matrixToCheck[row][col] != 0 && matrixToCheck[row][col] != 1) {
+                        graphIsLegit = false;
+                        System.out.println("Attempted to create a weighted graph");
+                    }
+                }
+            }
+        }
+        return graphIsLegit;
+    }
 }
