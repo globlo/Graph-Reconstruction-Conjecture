@@ -16,11 +16,11 @@ public class Graph {
     //Constructor for graph. Automatically checks if the passed in adjacency matrix is legitemate
     //If the graph is legitemate, store it, then calculate it's order and edges. If it is not, then instead create the trivial graph to aid with debugging
     public Graph(int[][] adjacencyMatrix) {
-        if (isMatrixValid(adjacencyMatrix) == true) {
+        if (isMatrixValidGraph(adjacencyMatrix) == true) {
             adjMat = adjacencyMatrix;
             graphOrder = adjMat[0].length;
             numberOfEdges = countNumerOfEdgesInGraph();
-            degreeSequence = calculateDegreeSequence();
+            degreeSequence = calculateGraphDegreeSequence();
         } else {
             //If the graph is invalid, create trivial graph instead to not break things *too much*
             int[][] trivialGraphMatrix = {{0}};
@@ -44,7 +44,7 @@ public class Graph {
 
     //Checks if a graph's adjacency matrix is valid. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
     //This means it's adjacency matrix should be square, mirrored, edge weights of only 1, and it's diaganols should all be zero
-    private static boolean isMatrixValid(int[][] matrixToCheck) {
+    private static boolean isMatrixValidGraph(int[][] matrixToCheck) {
         boolean graphIsLegit = true;
         //First check that the matrix rows and columns are the same length
         if (matrixToCheck.length != matrixToCheck[0].length) {
@@ -135,7 +135,7 @@ public class Graph {
 
     //Returns the degree sequence of a graph, which is a list of the amount of edges connected to each vertex
     //Since this is ran at graph creation, and since graphs can't change, keep it private and just access the static variable degreeSequence
-    private int[] calculateDegreeSequence() {
+    private int[] calculateGraphDegreeSequence() {
         int[] degreeSequence = new int[graphOrder];
         int degreeCounter;
         for (int row = 0; row < graphOrder; row++) {
@@ -153,7 +153,7 @@ public class Graph {
     //Creates a new graph object by duplicating the passed in graph, then adding an extra vertex with edges given by verticesToConnect
     //verticesToConnect is defined as an array of vertices that the new vertex should be connected to
     //For example, I want to add a vertex that's connected to original vertices 1 & 3 (Represented in adjMat as row/col 0 & 2), then I'll pass [0,2]
-    public static Graph createGraphWithNewVertex(Graph originalGraph, int[] verticesToConnect) {
+    public static Graph createGraphWithNewVertexAndEdges(Graph originalGraph, int[] verticesToConnect) {
         int[][] originalAdjMat = originalGraph.adjMat;
         int originalGraphOrder = originalGraph.graphOrder;
         //Add new row & column to represent the new vertex

@@ -1,5 +1,6 @@
 //GRC Project
 //GRC.java
+import java.util.ArrayList;
 
 //GRC is our main method class, experimentation and testing should occur here
 public class GRC {
@@ -24,9 +25,9 @@ public class GRC {
         Graph sampleGraph_1 = new Graph(sampleMatrix_1);
         Graph sampleGraph_2 = new Graph(sampleMatrix_2);
         Graph sampleGraph_3 = new Graph(sampleMatrix_3);
-        Deck sampleDeck_1 = Deck.createDeck(sampleGraph_1);
-        Deck sampleDeck_2 = Deck.createDeck(sampleGraph_2);
-        Deck sampleDeck_3 = Deck.createDeck(sampleGraph_3);
+        Deck sampleDeck_1 = Deck.createDeckFromGraph(sampleGraph_1);
+        Deck sampleDeck_2 = Deck.createDeckFromGraph(sampleGraph_2);
+        Deck sampleDeck_3 = Deck.createDeckFromGraph(sampleGraph_3);
 
 
         //Testing Count # of cycle in Graph
@@ -95,9 +96,23 @@ public class GRC {
         // }else{
         //     System.out.println("Decks 1 & 3 are NOT identical");
         // }
-
-
-        // Convert Matrix to ASCii Char
+/* 
+        //Testing for illegitemate deck
+        Graph[] fakeDeck = {sampleGraph_3, sampleGraph_2, sampleGraph_1, sampleGraph_3};
+        Deck sampleDeck_4 = new Deck(fakeDeck);
+        if (isDeckLegitemate(sampleDeck_4) == true) {
+            System.out.println("Deck is legitemate");
+        } else {
+            System.out.println("Deck is illegitemate");
+        }
+ */
+        //ArrayList<Graph> foundReconstructions;
+        //foundReconstructions = findAllReconstructionsByForce(sampleDeck_1);
+        // for (int i = 0; i < foundReconstructions.size(); i++) {
+        //     foundReconstructions.get(i).printGraph();
+        // }
+      
+              // Convert Matrix to ASCii Char
         char[] converted_Chars = Graph.Matrix_to_ASCiiChar(sampleMatrix_3);
         System.out.println("ASCii assign from matrix: ");
         for(int i=0; i<converted_Chars.length; i++ )
@@ -127,38 +142,5 @@ public class GRC {
         System.out.println("Program Execution Time: "+ (end_program_time - start_program_time)+ " nano sec");
         System.out.println("Graph Reconstruction Time: "+ (end_recunstruct_graph_time - start_recunstruct_graph_time)+ " nano sec");
 
-    }
-
-    //Reconstruct a graph by creating a deck then calling graph reconstruction function with a deck instead
-    public static void reconstructGraph(Graph graphToReconstruct) {
-        reconstructGraph(Deck.createDeck(graphToReconstruct));
-    }
-
-    //Reconstruct a graph from a given deck
-    public static Graph reconstructGraph(Deck deckToReconstructFrom) {
-        //Calculate original graphs Vertex count
-        int calculatedVertexCount = deckToReconstructFrom.numberOfCards;
-        //Calculate original graphs Edge count
-        int calculatedEdgeCount = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToReconstructFrom);
-        //Calculate original graphs degree sequence
-        int[] calculatedDegreeSequence = Deck.getDegreeSequenceOfOriginalGraphFromDeck(deckToReconstructFrom);
-        //Pick a card to reconstruct from
-        Graph cardWeReconstructFrom = deckToReconstructFrom.deckArr[0];
-        //Determine the number of edges missing from this card
-        int missingEdgeCount = calculatedEdgeCount - cardWeReconstructFrom.numberOfEdges;
-
-        //Try ALL combinations of graphs created by adding one vertex and attaching missingEdgeCount amount of edges to other vertices
-        int[][] possibleVerticesToConnectToList = CombinatoricsTools.generateCombinations(calculatedVertexCount - 1, missingEdgeCount);
-        for (int i = 0; i < possibleVerticesToConnectToList.length; i++) {
-            Graph attemptAtReconstruction = Graph.createGraphWithNewVertex(cardWeReconstructFrom, possibleVerticesToConnectToList[i]);
-            if (Deck.areTheseDecksIdentical(deckToReconstructFrom, Deck.createDeck(attemptAtReconstruction)) == true) {
-                System.out.println("Graph was reconstructed:");
-                attemptAtReconstruction.printGraph();
-                return attemptAtReconstruction;
-            }
-        }
-        System.out.println("Graph could not be reconstructed.");
-        Graph trivialGraph = new Graph();
-        return trivialGraph;
     }
 }
