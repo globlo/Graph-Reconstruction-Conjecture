@@ -113,13 +113,13 @@ public class GRC {
         // }
       
               // Convert Matrix to ASCii Char
-        char[] converted_Chars = Graph.Matrix_to_ASCiiChar(sampleMatrix_3);
+        char[] converted_Chars = MiscTools.Matrix_to_ASCiiChar(sampleMatrix_3);
         System.out.println("ASCii assign from matrix: ");
         for(int i=0; i<converted_Chars.length; i++ )
             System.out.print(converted_Chars[i]+ ", ");
         
         // Convert ASCii Char to Matrix
-        int [][] samp_matrix = Graph.ASCiiChar_to_Matrix(converted_Chars);
+        int [][] samp_matrix = MiscTools.ASCiiChar_to_Matrix(converted_Chars);
         System.out.println("\nMatrix assign from ASCii char : ");
         for(int i=0; i<samp_matrix[0].length; i++ ){
             for(int j=0; j<samp_matrix[0].length; j++ ){
@@ -133,7 +133,6 @@ public class GRC {
         System.out.println("Attempting to reconstruct graph from following deck:");
         sampleDeck_1.printDeck();
         long start_recunstruct_graph_time = System.nanoTime();
-        reconstructGraph(sampleDeck_1);
         long end_recunstruct_graph_time = System.nanoTime();
 
         long end_program_time = System.nanoTime();
