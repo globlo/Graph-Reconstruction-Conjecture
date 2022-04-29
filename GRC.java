@@ -129,11 +129,8 @@ public class GRC {
             System.out.println("");
         }
 
-
-        System.out.println("Attempting to reconstruct graph from following deck:");
-        sampleDeck_1.printDeck();
         long start_recunstruct_graph_time = System.nanoTime();
-        reconstructGraph(sampleDeck_1);
+        //Thing you want to record time for goes here
         long end_recunstruct_graph_time = System.nanoTime();
 
         long end_program_time = System.nanoTime();
