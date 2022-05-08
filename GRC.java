@@ -1,28 +1,38 @@
 //GRC Project
 //GRC.java
+import java.util.ArrayList;
 
 //GRC is our main method class, experimentation and testing should occur here
 public class GRC {
     public static void main(String[] args) {
+
+
+        long start_program_time = System.nanoTime();
+
         //Generating simple Graphs and their decks
         int[][] sampleMatrix_1 = {  {0,1,0,1},
                                     {1,0,1,1},
                                     {0,1,0,1},
                                     {1,1,1,0}};
+        Graph sampleGraph_1 = new Graph(sampleMatrix_1);
+        Deck sampleDeck_1 = Deck.createDeckFromGraph(sampleGraph_1);
         int[][] sampleMatrix_2 = {  {0,1,1,1},
                                     {1,0,1,0},
                                     {1,1,0,1},
                                     {1,0,1,0}};
+        Graph sampleGraph_2 = new Graph(sampleMatrix_2);
+        Deck sampleDeck_2 = Deck.createDeckFromGraph(sampleGraph_2);
         int[][] sampleMatrix_3 = {  {0,1,0,1},
                                     {1,0,1,0},
                                     {0,1,0,1},
                                     {1,0,1,0}};
-        Graph sampleGraph_1 = new Graph(sampleMatrix_1);
-        Graph sampleGraph_2 = new Graph(sampleMatrix_2);
         Graph sampleGraph_3 = new Graph(sampleMatrix_3);
-        Deck sampleDeck_1 = Deck.createDeck(sampleGraph_1);
-        Deck sampleDeck_2 = Deck.createDeck(sampleGraph_2);
-        Deck sampleDeck_3 = Deck.createDeck(sampleGraph_3);
+        Deck sampleDeck_3 = Deck.createDeckFromGraph(sampleGraph_3);
+
+
+        //Testing Count # of cycle in Graph
+        // int n = 3; //the length(# of verteces "i.e. Tirangle: n=3") you want to find
+        // System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
 
         //Testing file input
         // sampleGraph_1 = FileReader.readGraphFromFile("sampleGraphWSpaces.txt");
@@ -87,41 +97,58 @@ public class GRC {
         //     System.out.println("Decks 1 & 3 are NOT identical");
         // }
 
-        System.out.println("Attempting to reconstruct graph from following deck:");
-        sampleDeck_1.printDeck();
-        reconstructGraph(sampleDeck_1);
-    }
+        //Testing for illegitemate deck
+        // Graph[] fakeGraphArr = {sampleGraph_3, sampleGraph_2, sampleGraph_1, sampleGraph_3};
+        // Deck fakeDeck = new Deck(fakeGraphArr);
+        // System.out.println("Checking if the following deck is legitemate:");
+        // fakeDeck.printDeck();
+        // if (DeckExaminer.isDeckLegitimate(fakeDeck) == true) {
+        //     System.out.println("Deck is legitemate");
+        // } else {
+        //     System.out.println("Deck is illegitemate");
+        // }
 
-    //Reconstruct a graph by creating a deck then calling graph reconstruction function with a deck instead
-    public static void reconstructGraph(Graph graphToReconstruct) {
-        reconstructGraph(Deck.createDeck(graphToReconstruct));
-    }
+        //Testing ability to find ALL possible reconstructions as well as time tracking
+        // System.out.println("Attempting to find all reconstructions from following deck:");
+        // sampleDeck_1.printDeck();
+        // long start_recunstruct_graph_time = System.nanoTime();
+        // ArrayList<Graph> foundReconstructions;
+        // foundReconstructions = ReconstructionAlgorithms.findAllReconstructionsByForce(sampleDeck_1);
+        // System.out.println();
+        // for (int i = 0; i < foundReconstructions.size(); i++) {
+        //     System.out.println("Reconstruction " + i + ":");
+        //     foundReconstructions.get(i).printGraph();
+        //     System.out.println();
+        // }
+        // long end_recunstruct_graph_time = System.nanoTime();
+        // System.out.println("Graph Reconstruction Time: " + (end_recunstruct_graph_time - start_recunstruct_graph_time) + " nano sec");
 
-    //Reconstruct a graph from a given deck
-    public static Graph reconstructGraph(Deck deckToReconstructFrom) {
-        //Calculate original graphs Vertex count
-        int calculatedVertexCount = deckToReconstructFrom.numberOfCards;
-        //Calculate original graphs Edge count
-        int calculatedEdgeCount = GraphLookerAtter.countNumberOfEdgesInOriginalGraph(deckToReconstructFrom);
-        //Calculate original graphs degree sequence
-        int[] calculatedDegreeSequence = Deck.getDegreeSequenceOfOriginalGraphFromDeck(deckToReconstructFrom);
-        //Pick a card to reconstruct from
-        Graph cardWeReconstructFrom = deckToReconstructFrom.deckArr[0];
-        //Determine the number of edges missing from this card
-        int missingEdgeCount = calculatedEdgeCount - cardWeReconstructFrom.numberOfEdges;
+        //Testing integer matrix to Graph6 translation
+        // System.out.println("\nConverting the following matrix to it's graph6 equivalent: ");
+        // sampleGraph_3.printGraph();
+        // char[] converted_Chars = MiscTools.Matrix_to_ASCiiChar(sampleMatrix_3);
+        // System.out.print("Graph6 equivalent: ");
+        // for(int i = 0; i < converted_Chars.length; i++) {
+        //     System.out.print(converted_Chars[i]);
+        // }
+        // System.out.println();
 
-        //Try ALL combinations of graphs created by adding one vertex and attaching missingEdgeCount amount of edges to other vertices
-        int[][] possibleVerticesToConnectToList = CombinatoricsTools.generateCombinations(calculatedVertexCount - 1, missingEdgeCount);
-        for (int i = 0; i < possibleVerticesToConnectToList.length; i++) {
-            Graph attemptAtReconstruction = Graph.createGraphWithNewVertex(cardWeReconstructFrom, possibleVerticesToConnectToList[i]);
-            if (Deck.areTheseDecksIdentical(deckToReconstructFrom, Deck.createDeck(attemptAtReconstruction)) == true) {
-                System.out.println("Graph was reconstructed:");
-                attemptAtReconstruction.printGraph();
-                return attemptAtReconstruction;
-            }
-        }
-        System.out.println("Graph could not be reconstructed.");
-        Graph trivialGraph = new Graph();
-        return trivialGraph;
+        //Testing graph6 to integer matrix translation
+        // char[] convertedChars = {'C','l'};
+        // System.out.println("\nConverting the following graph6 value to it matrix equivalent: " + convertedChars[0] + convertedChars[1]);
+        // int[][] samp_matrix = MiscTools.ASCiiChar_to_Matrix(convertedChars);
+        // System.out.println("Matrix equivalent: ");
+        // for(int i = 0; i < samp_matrix[0].length; i++){
+        //     for(int j = 0; j < samp_matrix[0].length; j++){
+        //         System.out.print(samp_matrix[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+
+        //Examples of system time tracking
+        // long end_program_time = System.nanoTime();
+        // System.out.println("Program Start Time: " + start_program_time + " nano sec");
+        // System.out.println("Program End Time: " + end_program_time + " nano sec");
+        // System.out.println("Program Execution Time: " + (end_program_time - start_program_time) + " nano sec");
     }
 }

@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 //GRC Project
 //Graph.java
 
@@ -15,11 +13,11 @@ public class Graph {
     //Constructor for graph. Automatically checks if the passed in adjacency matrix is legitemate
     //If the graph is legitemate, store it, then calculate it's order and edges. If it is not, then instead create the trivial graph to aid with debugging
     public Graph(int[][] adjacencyMatrix) {
-        if (isMatrixValid(adjacencyMatrix) == true) {
+        if (MiscTools.isMatrixValidGraph(adjacencyMatrix) == true) {
             adjMat = adjacencyMatrix;
             graphOrder = adjMat[0].length;
             numberOfEdges = countNumerOfEdgesInGraph();
-            degreeSequence = calculateDegreeSequence();
+            degreeSequence = calculateGraphDegreeSequence();
         } else {
             //If the graph is invalid, create trivial graph instead to not break things *too much*
             int[][] trivialGraphMatrix = {{0}};
@@ -41,42 +39,6 @@ public class Graph {
         degreeSequence = trivialDegreeSequence;
     }
 
-    //Checks if a graph's adjacency matrix is valid. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
-    //This means it's adjacency matrix should be square, mirrored, edge weights of only 1, and it's diaganols should all be zero
-    private static boolean isMatrixValid(int[][] matrixToCheck) {
-        boolean graphIsLegit = true;
-        //First check that the matrix rows and columns are the same length
-        if (matrixToCheck.length != matrixToCheck[0].length) {
-            System.out.println("Attempted to create graph using matrix with invalid dimensions");
-            graphIsLegit = false;
-        } else {
-            //Iterate over rows
-            for (int row = 0; row < matrixToCheck.length; row++) {
-                //Iteratore over columns
-                for (int col = 0; col < matrixToCheck.length; col++) {
-                    //If a graph doesn't have a matching value across it's diaganol, marks as illegitemate
-                    if (matrixToCheck[row][col] != matrixToCheck[col][row]) {
-                        graphIsLegit = false;
-                        System.out.println("Attempted to create a directed graph");
-                    }
-                    //Check that diaganols are zero
-                    if (row == col) {
-                        if (matrixToCheck[row][col] != 0) {
-                            graphIsLegit = false;
-                            System.out.println("Attempted to create graph with self connected vertex");
-                        }
-                    }
-                    //Finally check that no values other than 0 or 1 are present
-                    if (matrixToCheck[row][col] != 0 && matrixToCheck[row][col] != 1) {
-                        graphIsLegit = false;
-                        System.out.println("Attempted to create a weighted graph");
-                    }
-                }
-            }
-        }
-        return graphIsLegit;
-    }
-
     //Print contents of a graphs adjacency matrix
     public void printGraph() {
         for (int row = 0; row < adjMat[0].length; row++) {
@@ -85,37 +47,6 @@ public class Graph {
             }
             System.out.println();
         }
-    }
-
-    //Creates a graph that is the same as the original graph, less one vertex
-    //The first vertex is represented by int Zero, second vertex by int one, etc
-    public static Graph creatSubgraphWithRemovedVertex(Graph originalGraph, int vertexNumber) {
-        final int orderOfOriginalGraph = originalGraph.graphOrder;
-        final int orderOfSubgraph = orderOfOriginalGraph - 1;
-        int[][] subAdjMat = new int[orderOfSubgraph][orderOfSubgraph];
-        //Used to tell which row/col we're writing to in the subgraph, which can be different from the cell we're reading from
-        int subGraphRow = 0;
-        int subGraphCol = 0;
-
-        //Iterate over all rows of original graph
-        for (int row = 0; row < orderOfOriginalGraph; row++) {
-            //If the row corresponds to the removed vertex, skip it
-            if (row != vertexNumber) {
-                //Otherwise, iterate over all columns of the original graph
-                for (int col = 0; col < orderOfOriginalGraph; col++) {
-                    //If column corresponds to the removed vertex, skip it
-                    if (col != vertexNumber) {
-                        //Write contents of original graph cell to currently marked subgraph cell
-                        subAdjMat[subGraphRow][subGraphCol] = originalGraph.adjMat[row][col];
-                        subGraphCol++;
-                    }
-                }
-                subGraphCol = 0;
-                subGraphRow++;
-            }
-        }
-        Graph graphToReturn = new Graph(subAdjMat);
-        return graphToReturn;
     }
 
     //Returns the number of edges in a graph
@@ -134,7 +65,7 @@ public class Graph {
 
     //Returns the degree sequence of a graph, which is a list of the amount of edges connected to each vertex
     //Since this is ran at graph creation, and since graphs can't change, keep it private and just access the static variable degreeSequence
-    private int[] calculateDegreeSequence() {
+    private int[] calculateGraphDegreeSequence() {
         int[] degreeSequence = new int[graphOrder];
         int degreeCounter;
         for (int row = 0; row < graphOrder; row++) {
@@ -147,59 +78,5 @@ public class Graph {
             degreeSequence[row] = degreeCounter;
         }
         return degreeSequence;
-    }
-
-    //Creates a new graph object by duplicating the passed in graph, then adding an extra vertex with edges given by verticesToConnect
-    //verticesToConnect is defined as an array of vertices that the new vertex should be connected to
-    //For example, I want to add a vertex that's connected to original vertices 1 & 3 (Represented in adjMat as row/col 0 & 2), then I'll pass [0,2]
-    public static Graph createGraphWithNewVertex(Graph originalGraph, int[] verticesToConnect) {
-        int[][] originalAdjMat = originalGraph.adjMat;
-        int originalGraphOrder = originalGraph.graphOrder;
-        //Add new row & column to represent the new vertex
-        int[][] newAdjMat = new int[originalGraphOrder + 1][originalGraphOrder + 1];
-        //Copy over contents of original adjacency matrix
-        for(int row = 0; row < newAdjMat.length; row++){
-            for(int col = 0; col < newAdjMat.length; col++){
-                //If we're in either the last row or column of our new graph, set it to zero
-                if (col == originalGraphOrder || row == originalGraphOrder) {
-                    newAdjMat[row][col] = 0;
-                } else {
-                    //Otherwise simply copy over original matrix contents
-                    newAdjMat[row][col] = originalAdjMat[row][col];
-                    
-                }
-            }
-        }
-        //Connect the new vertex to the given vertices
-        for(int i = 0; i < verticesToConnect.length; i++){
-            newAdjMat[originalGraphOrder][verticesToConnect[i]] = 1;
-            newAdjMat[verticesToConnect[i]][originalGraphOrder] = 1;
-        }
-        Graph graphToReturn = new Graph(newAdjMat);
-        return graphToReturn;
-    }
-    
-    //return binary with 0 or 1 for each index
-    public static int[] calculateVerticesThatMightNeedAnEdge(Graph graphInput, int[] expectedDegreeSequence) {
-        int[][] graphInputAdjMat = graphInput.adjMat;
-        int[] graphInputDegreeSequence = graphInput.degreeSequence.clone();
-
-        int[] tmpSeq = expectedDegreeSequence.clone();
-        Arrays.sort(tmpSeq);
-        //Since the expected degree sequence copy is now sorted, we can expect the largest degree to be in the last position of tmpSeq
-        int maxPossibleDegree = tmpSeq[tmpSeq.length - 1];
-
-        int[] verticesMissedSequence = new int[graphInputAdjMat.length];
-
-        //calculate the current sequence in the graph
-        for (int i = 0; i < graphInputAdjMat.length; i++) {
-            //find the vertex that misses edges
-            if (graphInputDegreeSequence[i] < maxPossibleDegree) {
-                verticesMissedSequence[i] = 1;
-            } else {
-                verticesMissedSequence[i] = 0;
-            }
-        }
-        return verticesMissedSequence;
     }
 }

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 //Class to contain all of our combinatorics-related methods
 public class CombinatoricsTools {
 
-    //Method I got off the internet because I've now spent 3 hours on my own method and I've noticed the constant
-    //dripping on my shoulder is actually my melted brain draining out my ear. I'll either clean this up, or fix my own version by wednesday
+    //Generate all possible permutations of a given vertex mapping
+    //For example, passing in {1,4,6} as array will set the ArrayList pointed to by mappingsList to be {{1,4,6},{1,6,4},{4,1,6},{4,6,1},{6,1,4},{6,4,1}}
     public static void permutationGenerator(int[] array, int pos, ArrayList<int[]> mappingsList) {
         if(pos >= array.length - 1) {
             mappingsList.add(array.clone());
@@ -52,7 +52,7 @@ public class CombinatoricsTools {
     //Generate all possible combinations from a set of n numbers of size r
     public static int[][] generateCombinations(int n, int r) {
         ArrayList<int[]> combinations = new ArrayList<>();
-        helper(combinations, new int[r], 0, n-1, 0);
+        helper(combinations, new int[r], 0, n - 1, 0);
         int[][] finalCombinationsArray = new int[combinations.size()][r];
         //Convert combinations list to int matrix
         for(int i = 0; i < finalCombinationsArray.length; i++) {
