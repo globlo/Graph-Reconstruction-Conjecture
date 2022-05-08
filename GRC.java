@@ -133,35 +133,21 @@ public class GRC {
         // System.out.println();
 
         // //Testing graph6 to integer matrix translation
-        //char[] convertedChars = {'K','}','K','G','G','K','A','?','O','@','_','F'};
-        char[] convertedChars = {'E','{','S','w'};
-        System.out.print("\nConverting the following graph6 value to it matrix equivalent: ");
-        for (int i = 0; i < convertedChars.length; i++) {
-            System.out.print(convertedChars[i]);
-        }
-        System.out.println();
-        int[][] samp_matrix = MiscTools.ASCiiChar_to_Matrix(convertedChars);
-        System.out.println("Matrix equivalent: ");
-        for(int i = 0; i < samp_matrix[0].length; i++){
-            for(int j = 0; j < samp_matrix[0].length; j++){
-                System.out.print(samp_matrix[i][j]);
-            }
-            System.out.println();
-        }
-        char[] convertedChars2 = {'E','s','\\','o'};
-        System.out.print("\nConverting the following graph6 value to it matrix equivalent: ");
-        for (int i = 0; i < convertedChars2.length; i++) {
-            System.out.print(convertedChars2[i]);
-        }
-        System.out.println();
-        int[][] samp_matrix2 = MiscTools.ASCiiChar_to_Matrix(convertedChars2);
-        System.out.println("Matrix equivalent: ");
-        for(int i = 0; i < samp_matrix2[0].length; i++){
-            for(int j = 0; j < samp_matrix2[0].length; j++){
-                System.out.print(samp_matrix2[i][j]);
-            }
-            System.out.println();
-        }
+        // char[] convertedChars = {'K','}','K','G','G','K','A','?','O','@','_','F'};
+        // char[] convertedChars = {'E','{','S','w'};
+        // System.out.print("\nConverting the following graph6 value to it matrix equivalent: ");
+        // for (int i = 0; i < convertedChars.length; i++) {
+        //     System.out.print(convertedChars[i]);
+        // }
+        // System.out.println();
+        // int[][] samp_matrix = MiscTools.ASCiiChar_to_Matrix(convertedChars);
+        // System.out.println("Matrix equivalent: ");
+        // for(int i = 0; i < samp_matrix[0].length; i++){
+        //     for(int j = 0; j < samp_matrix[0].length; j++){
+        //         System.out.print(samp_matrix[i][j]);
+        //     }
+        //     System.out.println();
+        // }
 
         //Examples of system time tracking
         // long end_program_time = System.nanoTime();
@@ -185,5 +171,14 @@ public class GRC {
         // System.out.println("After sorting:");
         // sortedGraph.printGraph();
 
+        //Testing Kocay Graph Generation
+        System.out.println(sampleGraph_4.numberOfEdges);
+        Graph[] kocayArray;
+        kocayArray = KocayGraphGenerator.generateKocayGraphs(sampleGraph_4);
+        for (int i = 0; i < kocayArray.length; i++) {
+            System.out.println("Kocay Graph " + i + ":");
+            kocayArray[i].printGraph();
+            System.out.println();
+        }
     }
 }
