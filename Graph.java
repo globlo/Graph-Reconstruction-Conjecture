@@ -79,4 +79,48 @@ public class Graph {
         }
         return degreeSequence;
     }
+
+    //Creates a new graph with an adjacency matrix such that each row has equal to or more 1's than the previous row
+    public Graph createGraphWithSortedLabels() {
+        Graph sortedGraph;
+        int[][] sortedMatrix = new int[graphOrder][graphOrder];
+        MiscTools.copyMatrix(adjMat, sortedMatrix);
+        int[] tmpRow;
+        int[] tmpCol = new int[adjMat.length];
+        int currentSortedRow = 0;
+        //Check in order of increasing vertex degrees
+        //Start with i = 1 since every vertex should be connected
+        for (int i = 1; i < graphOrder; i++) {
+            //Iterate through every row, looking for a row with an edge count of i
+            for (int row = currentSortedRow; row < adjMat.length; row++) {
+                
+                if (degreeSequence[row] == i) {
+                    //If we're not swapping with ourself
+                    if (currentSortedRow != row) {
+                        //Swap current sorted row index with row where degree sequence = i was found
+                        tmpRow = sortedMatrix[currentSortedRow];
+                        sortedMatrix[currentSortedRow] = sortedMatrix[row];
+                        //MiscTools.printMatrix(sortedMatrix);System.out.println();
+                        sortedMatrix[row] = tmpRow;
+                        
+                        for (int j = 0; j < tmpCol.length; j++) {
+                            tmpCol[j] = sortedMatrix[j][currentSortedRow];
+                        }
+                        for (int j = 0; j < tmpCol.length; j++) {
+                            sortedMatrix[j][currentSortedRow] = sortedMatrix[j][row];
+                        }
+                        for (int j = 0; j < tmpCol.length; j++) {
+                            sortedMatrix[j][row] = tmpCol[j];
+                        }
+                    }
+                    currentSortedRow++;
+                }
+            }
+        }
+
+        sortedGraph = new Graph(sortedMatrix);
+        return sortedGraph;
+    }
+
+
 }

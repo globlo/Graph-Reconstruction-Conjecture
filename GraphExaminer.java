@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 //GRC Project
 //GraphExaminer.java
@@ -56,7 +57,7 @@ public class GraphExaminer {
         return graphToReturn;
     }
 
-    //Checks if an isomorphism exists between two graphs
+    //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings
     public static boolean areGraphsIsomorphicBruteForce(Graph leftGraph, Graph rightGraph) {
         boolean graphsAreIsomorphic = false;
         //First check all the easy requirements for isomorphism
@@ -73,6 +74,116 @@ public class GraphExaminer {
         }
         return graphsAreIsomorphic;
     }
+
+
+
+
+
+    //Checks if an isomorphism exists between two graphs by using a search tree to narrow the possible vertex mappings
+    public static boolean areGraphsIsomorphicTreeSearch(Graph leftGraph, Graph rightGraph) {
+        boolean graphsAreIsomorphic = false;
+        boolean possibleIsomorphismFound = false;
+        //First check all the easy requirements for isomorphism
+        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            //Create root and first level of tree. For easier indexing, root is at level -1 with children at level 0
+            IsomorphimTreeNode root = IsomorphimTreeNode.createInitialTree(leftGraph.graphOrder);
+            int currentLevel = 0;
+            ArrayList<Integer> currentSequence;
+            //Check each branch of this first level
+            for (int i = 0; i < leftGraph.graphOrder; i++) {
+                //Get vertexIndex from child node
+                int currentVertexIndex = root.children.get(i).vertexIndex;
+                
+                //Compare if degree of left graph's vertex at given index matches degree of right graph's vertex at index equal to current tree level
+                if (leftGraph.degreeSequence[currentVertexIndex] == rightGraph.degreeSequence[currentLevel]) {
+                    //This vertex is a possible match since their degrees are the same. Now recursively check children for matches
+                    currentSequence = new ArrayList<Integer>();
+                    currentSequence.add(Integer.valueOf(currentVertexIndex));
+                    possibleIsomorphismFound = recursivelyCheckChildren(root.children.get(i), currentSequence, currentLevel + 1, leftGraph.graphOrder, leftGraph.degreeSequence, rightGraph.degreeSequence);
+                }
+            }
+        }
+        return graphsAreIsomorphic;
+    }
+
+    public static boolean recursivelyCheckChildren(IsomorphimTreeNode currentNode, ArrayList<Integer> currentSequence, int currentLevel, int totalVertexCount, int[] leftDegSeq, int[] rightDegSeq) {
+        //If our currentSequence size is equal to our total vertex count minus one, then we have a possible isomorphism
+        if (currentSequence.size() == totalVertexCount - 1) {
+            return true;
+        }
+        //First generate the child sequence
+        int[] childSequence = generateChildSequence(currentSequence, totalVertexCount);
+        
+        boolean possibleIsomorphism = false;
+        IsomorphimTreeNode.generateChildren(currentNode, childSequence);
+
+        for (int i = 0; i < childSequence.length; i++) {
+            int currentVertexIndex = currentNode.children.get(i).vertexIndex;
+
+            if (leftDegSeq[currentVertexIndex] == rightDegSeq[currentLevel]) {
+                currentSequence.add(Integer.valueOf(currentVertexIndex));
+                possibleIsomorphism = recursivelyCheckChildren(currentNode.children.get(i), currentSequence, currentLevel + 1, totalVertexCount, leftDegSeq, rightDegSeq);
+            }
+            if (possibleIsomorphism == true) {
+                return true;
+            } else {
+                
+            }
+        }
+        
+        return false;
+    }
+
+    public static int[] generateChildSequence(int[] currentlyUsedSequence, int vertexCount) {
+        //Create sequence array of appropriate length
+        int[] childSequence = new int[vertexCount - currentlyUsedSequence.length];
+        int childSequenceIndex = 0;
+        boolean skipThisI;
+        //Try to fill in sequence array
+        for (int i = 0; i < vertexCount; i++) {
+            skipThisI = false;
+            //Check if the current i value is in currentlyUsedSequence
+            for (int j = 0; j < currentlyUsedSequence.length; j++) {
+                if (i == currentlyUsedSequence[j]) {
+                    skipThisI = true;
+                    break;
+                }
+            }
+            if (skipThisI == false) {
+                childSequence[childSequenceIndex] = i;
+                childSequenceIndex++;
+            }
+        }
+        return childSequence;
+    }
+    public static int[] generateChildSequence(ArrayList<Integer> currentlyUsedSequence, int vertexCount) {
+        //Create sequence array of appropriate length
+        int[] childSequence = new int[vertexCount - currentlyUsedSequence.size()];
+        int childSequenceIndex = 0;
+        boolean skipThisI;
+        //Try to fill in sequence array
+        for (int i = 0; i < vertexCount; i++) {
+            skipThisI = false;
+            //Check if the current i value is in currentlyUsedSequence
+            for (int j = 0; j < currentlyUsedSequence.size(); j++) {
+                if (i == currentlyUsedSequence.get(j).intValue()) {
+                    skipThisI = true;
+                    break;
+                }
+            }
+            if (skipThisI == false) {
+                childSequence[childSequenceIndex] = i;
+                childSequenceIndex++;
+            }
+        }
+        return childSequence;
+    }
+
+
+
+
+
+
 
     //Creates a graph that is the same as the original graph, less one vertex
     //The first vertex is represented by int Zero, second vertex by int one, etc
@@ -128,6 +239,8 @@ public class GraphExaminer {
         }
         return verticesMissedSequence;
     }
+
+
 
     // public static int count = 0;
     // public static void DFS(int graph[][], boolean marked[], int n, int vert, int start) {
