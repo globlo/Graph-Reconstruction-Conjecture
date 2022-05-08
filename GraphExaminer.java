@@ -134,6 +134,8 @@ public class GraphExaminer {
         return false;
     }
 
+
+
     public static int[] generateChildSequence(int[] currentlyUsedSequence, int vertexCount) {
         //Create sequence array of appropriate length
         int[] childSequence = new int[vertexCount - currentlyUsedSequence.length];
@@ -156,6 +158,11 @@ public class GraphExaminer {
         }
         return childSequence;
     }
+
+    //currentlyUsedSequence = {3}, vertexCount = 4
+    //childSequence returned = {0,1,2}
+    //currentlyUsedSequence = {1,3}, vertexCount = 7
+    //childSequence returned = {0,2,4,5,6,7}
     public static int[] generateChildSequence(ArrayList<Integer> currentlyUsedSequence, int vertexCount) {
         //Create sequence array of appropriate length
         int[] childSequence = new int[vertexCount - currentlyUsedSequence.size()];

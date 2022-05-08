@@ -123,17 +123,18 @@ public class GRC {
         // System.out.println("Graph Reconstruction Time: " + (end_recunstruct_graph_time - start_recunstruct_graph_time) + " nano sec");
 
         //Testing integer matrix to Graph6 translation
-        System.out.println("\nConverting the following matrix to it's graph6 equivalent: ");
-        sampleGraph_4.printGraph();
-        char[] converted_Chars = MiscTools.Matrix_to_ASCiiChar(sampleGraph_4.adjMat);
-        System.out.print("Graph6 equivalent: ");
-        for(int i = 0; i < converted_Chars.length; i++) {
-            System.out.print(converted_Chars[i]);
-        }
-        System.out.println();
+        // System.out.println("\nConverting the following matrix to it's graph6 equivalent: ");
+        // sampleGraph_4.printGraph();
+        // char[] converted_Chars = MiscTools.Matrix_to_ASCiiChar(sampleGraph_4.adjMat);
+        // System.out.print("Graph6 equivalent: ");
+        // for(int i = 0; i < converted_Chars.length; i++) {
+        //     System.out.print(converted_Chars[i]);
+        // }
+        // System.out.println();
 
-        //Testing graph6 to integer matrix translation
-        char[] convertedChars = {'K','}','K','G','G','K','A','?','O','@','_','F'};
+        // //Testing graph6 to integer matrix translation
+        //char[] convertedChars = {'K','}','K','G','G','K','A','?','O','@','_','F'};
+        char[] convertedChars = {'E','{','S','w'};
         System.out.print("\nConverting the following graph6 value to it matrix equivalent: ");
         for (int i = 0; i < convertedChars.length; i++) {
             System.out.print(convertedChars[i]);
@@ -144,6 +145,20 @@ public class GRC {
         for(int i = 0; i < samp_matrix[0].length; i++){
             for(int j = 0; j < samp_matrix[0].length; j++){
                 System.out.print(samp_matrix[i][j]);
+            }
+            System.out.println();
+        }
+        char[] convertedChars2 = {'E','s','\\','o'};
+        System.out.print("\nConverting the following graph6 value to it matrix equivalent: ");
+        for (int i = 0; i < convertedChars2.length; i++) {
+            System.out.print(convertedChars2[i]);
+        }
+        System.out.println();
+        int[][] samp_matrix2 = MiscTools.ASCiiChar_to_Matrix(convertedChars2);
+        System.out.println("Matrix equivalent: ");
+        for(int i = 0; i < samp_matrix2[0].length; i++){
+            for(int j = 0; j < samp_matrix2[0].length; j++){
+                System.out.print(samp_matrix2[i][j]);
             }
             System.out.println();
         }
@@ -164,19 +179,11 @@ public class GRC {
         // System.out.println(childSeq.length);
 
         //Testing graph relabeling
-        // System.out.println("Before touching:");
-        // sampleGraph_1.printGraph();
-        // Graph sortedGraph = sampleGraph_1.createGraphWithSortedLabels();
+        // Graph sortedGraph = sampleGraph_2.createGraphWithSortedLabels();
         // System.out.println("Before sorting:");
-        // sampleGraph_1.printGraph();
+        // sampleGraph_2.printGraph();
         // System.out.println("After sorting:");
         // sortedGraph.printGraph();
-        // System.out.println("Before touching:");
-        // sampleGraph_4.printGraph();
-        // Graph sortedGraph = sampleGraph_4.createGraphWithSortedLabels();
-        // System.out.println("Before sorting:");
-        // sampleGraph_4.printGraph();
-        // System.out.println("After sorting:");
-        // sortedGraph.printGraph();
+
     }
 }
