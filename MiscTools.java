@@ -102,7 +102,16 @@ public class MiscTools {
         return graphIsLegit;
     }
 
-    public static char[] Matrix_to_ASCiiChar(int[][] sampleGraph) {
+    public static void printGraphArray(Graph[] graphsToPrint) {
+        for (int i = 0; i < graphsToPrint.length; i++) {
+            System.out.println(i);
+            graphsToPrint[i].printGraph();
+            System.out.println();
+        }
+    } 
+
+
+    public static char[] matrix_to_graph6(int[][] sampleGraph) {
 
         int count =0; // Count char[] char to assgin ascii char
         int numb =0; //  Temp # of int to convert ascii char
@@ -147,7 +156,7 @@ public class MiscTools {
         return ch;
     }
 
-    public static int[][] ASCiiChar_to_Matrix(char[] ch) {
+    public static int[][] graph6_to_matrix(char[] ch) {
 
         int ct = 0; // counter for six_digits
         int count = 1; //counter for ch[] array

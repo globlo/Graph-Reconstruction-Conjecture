@@ -51,4 +51,33 @@ public class FileReader {
         }
         return graphToReturn;
     }
+
+
+    //Since we know we're dealing with a fixed amount of graphs of equivalent order, we can pass the known size ahead of time
+    public static char[][] readG6FromFile(String inputFile, int numOfG6InFile, int numOfCharsInG6) {
+        char[][] arrayOfG6 = new char[numOfG6InFile][numOfCharsInG6];
+        try {
+            File file = new File(inputFile);
+            Scanner scanner = new Scanner(file);
+            String[] stringArr = new String[numOfG6InFile];
+            int counter = 0;
+
+            while (scanner.hasNextLine() == true) {
+                stringArr[counter] = scanner.nextLine();
+                counter++;
+            }
+            scanner.close();
+
+            for (int i = 0; i < arrayOfG6.length; i++) {
+                arrayOfG6[i] = stringArr[i].toCharArray();
+            }
+            
+            
+        } catch (Exception e) {
+            System.out.println("File not found.");
+        }
+
+        return arrayOfG6;
+    }
+
 }

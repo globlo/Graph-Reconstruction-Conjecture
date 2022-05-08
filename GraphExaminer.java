@@ -58,7 +58,7 @@ public class GraphExaminer {
     }
 
     //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings
-    public static boolean areGraphsIsomorphicBruteForce(Graph leftGraph, Graph rightGraph) {
+    public static boolean areGraphsIsomorphicBruteForceV1(Graph leftGraph, Graph rightGraph) {
         boolean graphsAreIsomorphic = false;
         //First check all the easy requirements for isomorphism
         if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
@@ -74,6 +74,133 @@ public class GraphExaminer {
         }
         return graphsAreIsomorphic;
     }
+
+    //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings, but store vertex mappings as single integers instead of arrays of integers
+    public static boolean areGraphsIsomorphicBruteForceV2(Graph leftGraph, Graph rightGraph) {
+        boolean graphsAreIsomorphic = false;
+        //First check all the easy requirements for isomorphism
+        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            //Then check every possible vertex mapping between the two graphs (n! possibilities yipee!)
+            long[] mappingList = CombinatoricsTools.generateAllPossibleMapsV2(leftGraph.graphOrder);
+            for (int i = 0; i < mappingList.length; i++) {
+                //
+                //graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
+                //
+                //If at any point we find a valid mapping, then return true
+                if (graphsAreIsomorphic == true) {
+                    return graphsAreIsomorphic;
+                }
+            }
+        }
+        return graphsAreIsomorphic;
+    }
+
+
+
+
+
+
+
+
+
+    //Checks if an isomorphism exists between two graphs by using the novel method covered in paper 3
+    public static boolean areGraphsIsomorphicNovelMethod(Graph leftGraph, Graph rightGraph) {
+
+        boolean nodeMatchFound = false;
+        int[] edgeSequenceToCheck = new int[leftGraph.graphOrder];
+        boolean[] nodeFlags = new boolean[leftGraph.graphOrder];
+        for (int i = 0; i < nodeFlags.length; i++) {
+            nodeFlags[i] = false;
+        }
+
+        //First check all the easy requirements for isomorphism
+        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            //Next iterate through every node in the left graph
+            for (int i = 0; i < leftGraph.graphOrder; i++) {
+                //Check if node[i] from the left graph can be matched with any unmatched node in the right graph
+                nodeMatchFound = matchNodeWithOtherGraph(i, leftGraph, rightGraph, nodeFlags, edgeSequenceToCheck);
+                //If it was impossible to find a match for even a single node, then the graphs are not isomorphic
+                if (nodeMatchFound == false) {
+                    return false;
+                }
+            }
+        }
+        //If every node was able to be matched
+        return true;
+    }
+
+    public static boolean matchNodeWithOtherGraph(int leftNodeIndex, Graph leftGraph, Graph rightGraph, boolean[] nodeFlags, int[] edgeSequenceToCheck) {
+        boolean matchFound = false;
+        int rightNodeIndex = -1;
+        for (int i = 0; i < rightGraph.graphOrder; i++) {
+            if (nodeFlags[i] == false) {
+                rightNodeIndex = i;
+                matchFound = matchNodes(leftNodeIndex, rightNodeIndex, leftGraph, rightGraph, edgeSequenceToCheck);
+                if (matchFound == true) {
+                    nodeFlags[i] = true;
+                    return matchFound;
+                }
+            }
+        }
+        return matchFound;
+    }
+
+    public static boolean matchNodes(int leftNodeIndex, int rightNodeIndex, Graph leftGraph, Graph rightGraph, int[] edgeSequenceToCheck) {
+        boolean matchFound = false;
+        if (leftGraph.degreeSequence[leftNodeIndex] == rightGraph.degreeSequence[rightNodeIndex]) {
+            matchFound = matchEdges(leftNodeIndex, rightNodeIndex, leftGraph, rightGraph);
+            
+        }
+        return matchFound;
+    }
+
+    public static boolean matchEdges(int leftNodeIndex, int rightNodeIndex, Graph leftGraph, Graph rightGraph) {
+        boolean matchFound = false;
+        int numberOfEdges = leftGraph.degreeSequence[leftNodeIndex];
+        int edgeIndex = 0;
+        boolean[] edgesMatchedFlags = new boolean[numberOfEdges];
+        for (int i = 0; i < edgesMatchedFlags.length; i++) {
+            edgesMatchedFlags[i] = false;
+        }
+        //Check for all possible edges
+        for (int i = 0; i < leftGraph.adjMat[leftNodeIndex].length; i++) {
+            //If an edge is found
+            if (leftGraph.adjMat[leftNodeIndex][i] == 1) {
+                //Then check for all possible edges in the right graph    
+                for (int j = 0; j < rightGraph.adjMat[rightNodeIndex].length; j++) {
+                    //If an edge is found in the right graph
+                    if (rightGraph.adjMat[rightNodeIndex][j] == 1) {
+                        //And if that edge hasn't already been "matched"    
+                        if (edgesMatchedFlags[edgeIndex] == false) {
+                            //Then check if the degree of the vertices on the opposite ends of both of these edges are equal
+                            if (leftGraph.degreeSequence[i] == rightGraph.degreeSequence[j]) {
+                                //If so, then an edge match is found
+                                edgesMatchedFlags[j] = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Check that we've successfully matched our edges one-to-one (none are unmatched)
+        for (int i = 0; i < edgesMatchedFlags.length; i++) {
+            //If even one is unmatched, then node1 can not be isomorphic to node2
+            if (edgesMatchedFlags[i] == false) {
+                matchFound = false;
+                return matchFound;
+            }
+        }
+
+        matchFound = true;
+        return matchFound;
+    }
+
+
+
+
+
+
 
 
 

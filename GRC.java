@@ -34,9 +34,9 @@ public class GRC {
         // System.out.println("Total cycles of length "+n+" are "+Graph.countCycles(sampleMatrix_1, n));
 
         //Testing file input
-        Graph sampleGraph_4 = FileReader.readGraphFromFile("sampleCubic12.txt");
-        System.out.println("Sample Graph from file:");
-        sampleGraph_4.printGraph();
+        // Graph sampleGraph_4 = FileReader.readGraphFromFile("sampleCubic12.txt");
+        // System.out.println("Sample Graph from file:");
+        // sampleGraph_4.printGraph();
 
         //Testing edge calculations
         // System.out.print("Edges in sample graph:");
@@ -172,13 +172,48 @@ public class GRC {
         // sortedGraph.printGraph();
 
         //Testing Kocay Graph Generation
-        System.out.println(sampleGraph_4.numberOfEdges);
-        Graph[] kocayArray;
-        kocayArray = KocayGraphGenerator.generateKocayGraphs(sampleGraph_4);
-        for (int i = 0; i < kocayArray.length; i++) {
-            System.out.println("Kocay Graph " + i + ":");
-            kocayArray[i].printGraph();
-            System.out.println();
-        }
+        // System.out.println(sampleGraph_4.numberOfEdges);
+        // Graph[] kocayArray;
+        // kocayArray = KocayGraphGenerator.generateKocayGraphs(sampleGraph_4);
+        // for (int i = 0; i < kocayArray.length; i++) {
+        //     System.out.println("Kocay Graph " + i + ":");
+        //     kocayArray[i].printGraph();
+        //     System.out.println();
+        // }
+
+        //Testing for isomorphism pruning
+        // int[][] sampleMatrix_4 = {  {0,1,1,1},
+        //                             {1,0,1,1},
+        //                             {1,1,0,1},
+        //                             {1,1,1,0}};
+        // Graph sampleGraph_4 = new Graph(sampleMatrix_4);
+        // Graph sampleGraph_5 = new Graph(sampleMatrix_2);
+        // Graph sampleGraph_6 = new Graph(sampleMatrix_1);
+        // Graph[] graphArr = {sampleGraph_3, sampleGraph_2, sampleGraph_1, sampleGraph_4, sampleGraph_5, sampleGraph_6};
+        // MiscTools.printGraphArray(graphArr);
+        // Graph[] nonIsoGraphArr = VerifyGRCTools.removeIsomorphicGraphsFromArray(graphArr);
+        // MiscTools.printGraphArray(nonIsoGraphArr);
+
+        //Testing reading in G6 file
+        // char[][] g6Array = FileReader.readG6FromFile("cub12FirstFive.g6.txt", 5, 12);
+        // System.out.println("G6 items read: ");
+        // for (int i = 0; i < g6Array.length; i++) {
+        //     for (int j = 0; j < g6Array[0].length; j++) {
+        //         System.out.print(g6Array[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+
+        //Testing the big picture
+        VerifyGRCTools.verifyTheKocayGraphsFromTheCubicGraphsInThisFileForGRC("cub08.g6.txt", 5, 6);
+        //VerifyGRCTools.verifyTheKocayGraphsFromTheCubicGraphsInThisFileForGRC("cub12FirstTwo.g6.txt", 2, 12);
+        long end_program_time = System.nanoTime();
+        System.out.println("Program Execution Time: " + (end_program_time - start_program_time) + " nano sec");
+        //Testing 1D mapping generation
+        // long[] allMaps = CombinatoricsTools.generateAllPossibleMapsV2(6);
+        // System.out.println(allMaps.length + " mappings generated.");
+        // for (int i = 0; i < allMaps.length; i++) {
+        //     System.out.println(allMaps[i]);
+        // }
     }
 }
