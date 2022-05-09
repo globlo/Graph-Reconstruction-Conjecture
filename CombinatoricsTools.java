@@ -8,6 +8,7 @@ public class CombinatoricsTools {
     //Generate all possible permutations of a given vertex mapping
     //For example, passing in {1,4,6} as array will set the ArrayList pointed to by mappingsList to be {{1,4,6},{1,6,4},{4,1,6},{4,6,1},{6,1,4},{6,4,1}}
     public static void permutationGenerator(int[] array, int pos, ArrayList<int[]> mappingsList) {
+
         if(pos >= array.length - 1) {
             mappingsList.add(array.clone());
             return;
@@ -25,18 +26,44 @@ public class CombinatoricsTools {
 
     //Create ALL possible mappings between two graphs
     public static int[][] generateAllPossibleMaps(int orderOfGraph) {
-        
+        //System.out.println("Creating " + MiscTools.getFactorial(orderOfGraph) + "possible vertex mappings");
         ArrayList<int[]> mappingList = new ArrayList<int[]>();
+        
         int[][] finalMapList = new int[MiscTools.getFactorial(orderOfGraph)][orderOfGraph];
         //Initialize integerList to be used for map generation
         int[] baseMap = new int[orderOfGraph];
-        
         int tmpCounter = 0;
         for (int i = 0; i < baseMap.length; i++) {
             baseMap[i] = tmpCounter;
             tmpCounter++;
         }
+
+        //Fill mappingList with all permutations
+        CombinatoricsTools.permutationGenerator(baseMap, 0, mappingList);
+        //Convert mappingList to int matrix
+        for(int i = 0; i < finalMapList.length; i++) {
+            for (int j = 0; j < finalMapList[i].length; j++) {
+                finalMapList[i][j] = (int)mappingList.get(i)[j];
+            }
+        }
+        mappingList.clear();
+        return finalMapList;
+    }
+
+    //Create ALL possible mappings between two graphs
+    public static int[][] generateAllPossibleMapsTree(int orderOfGraph) {
+        //System.out.println("Creating " + MiscTools.getFactorial(orderOfGraph) + "possible vertex mappings");
+        ArrayList<int[]> mappingList = new ArrayList<int[]>();
         
+        int[][] finalMapList = new int[MiscTools.getFactorial(orderOfGraph)][orderOfGraph];
+        //Initialize integerList to be used for map generation
+        int[] baseMap = new int[orderOfGraph];
+        int tmpCounter = 0;
+        for (int i = 0; i < baseMap.length; i++) {
+            baseMap[i] = tmpCounter;
+            tmpCounter++;
+        }
+
         //Fill mappingList with all permutations
         CombinatoricsTools.permutationGenerator(baseMap, 0, mappingList);
         //Convert mappingList to int matrix

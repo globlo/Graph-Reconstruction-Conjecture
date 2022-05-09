@@ -6,6 +6,7 @@ import java.util.Scanner;
 //FileReader stores all of our functions related to reading in a graph or deck from a .txt file
 public class FileReader {
 
+
     public static String [] ifNextLineHasSpace(String line) {
 
         if(line.contains(" ")){
@@ -72,6 +73,16 @@ public class FileReader {
                 arrayOfG6[i] = stringArr[i].toCharArray();
             }
             
+            //Debug for step 1
+            if (GRC.debug == true) {
+                System.out.println("G6 items read: ");
+                for (int i = 0; i < arrayOfG6.length; i++) {
+                    for (int j = 0; j < arrayOfG6[0].length; j++) {
+                        System.out.print(arrayOfG6[i][j]);
+                    }
+                    System.out.println();
+                }
+            }
             
         } catch (Exception e) {
             System.out.println("File not found.");

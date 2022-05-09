@@ -53,7 +53,7 @@ public class DeckExaminer {
                     //If we haven't found a match for our current left deck card & we haven't used our current right deck card
                     if (leftCardMatchFound != true && usedRightDeckCards[rightDeckCardIndex] == 0) {
                         //Then check for a match at the current index of our right deck
-                        if (GraphExaminer.areGraphsIsomorphicBruteForceV1(leftDeck.deckArr[leftDeckCardIndex], rightDeck.deckArr[rightDeckCardIndex]) == true) {
+                        if (GraphExaminer.areGraphsIsomorphicBruteForce(leftDeck.deckArr[leftDeckCardIndex], rightDeck.deckArr[rightDeckCardIndex]) == true) {
                             leftCardMatchFound = true;
                             usedRightDeckCards[rightDeckCardIndex] = 1;
                         }

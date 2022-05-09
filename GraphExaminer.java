@@ -57,8 +57,16 @@ public class GraphExaminer {
         return graphToReturn;
     }
 
+    public static boolean areGraphsIsomorphic(Graph leftGraph, Graph rightGraph) {
+        if (GRC.useBruteForceIsomorphismCheck == true) {
+            return areGraphsIsomorphicBruteForce(leftGraph, rightGraph);
+        } else {
+            return areGraphsIsomorphicTreeSearch(leftGraph, rightGraph);
+        }
+    }
+
     //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings
-    public static boolean areGraphsIsomorphicBruteForceV1(Graph leftGraph, Graph rightGraph) {
+    public static boolean areGraphsIsomorphicBruteForce(Graph leftGraph, Graph rightGraph) {
         boolean graphsAreIsomorphic = false;
         //First check all the easy requirements for isomorphism
         if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
@@ -75,147 +83,17 @@ public class GraphExaminer {
         return graphsAreIsomorphic;
     }
 
-    //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings, but store vertex mappings as single integers instead of arrays of integers
-    public static boolean areGraphsIsomorphicBruteForceV2(Graph leftGraph, Graph rightGraph) {
-        boolean graphsAreIsomorphic = false;
-        //First check all the easy requirements for isomorphism
-        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
-            //Then check every possible vertex mapping between the two graphs (n! possibilities yipee!)
-            long[] mappingList = CombinatoricsTools.generateAllPossibleMapsV2(leftGraph.graphOrder);
-            for (int i = 0; i < mappingList.length; i++) {
-                //
-                //graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
-                //
-                //If at any point we find a valid mapping, then return true
-                if (graphsAreIsomorphic == true) {
-                    return graphsAreIsomorphic;
-                }
-            }
-        }
-        return graphsAreIsomorphic;
-    }
-
-
-
-
-
-
-
-
-
-    //Checks if an isomorphism exists between two graphs by using the novel method covered in paper 3
-    public static boolean areGraphsIsomorphicNovelMethod(Graph leftGraph, Graph rightGraph) {
-
-        boolean nodeMatchFound = false;
-        int[] edgeSequenceToCheck = new int[leftGraph.graphOrder];
-        boolean[] nodeFlags = new boolean[leftGraph.graphOrder];
-        for (int i = 0; i < nodeFlags.length; i++) {
-            nodeFlags[i] = false;
-        }
-
-        //First check all the easy requirements for isomorphism
-        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
-            //Next iterate through every node in the left graph
-            for (int i = 0; i < leftGraph.graphOrder; i++) {
-                //Check if node[i] from the left graph can be matched with any unmatched node in the right graph
-                nodeMatchFound = matchNodeWithOtherGraph(i, leftGraph, rightGraph, nodeFlags, edgeSequenceToCheck);
-                //If it was impossible to find a match for even a single node, then the graphs are not isomorphic
-                if (nodeMatchFound == false) {
-                    return false;
-                }
-            }
-        }
-        //If every node was able to be matched
-        return true;
-    }
-
-    public static boolean matchNodeWithOtherGraph(int leftNodeIndex, Graph leftGraph, Graph rightGraph, boolean[] nodeFlags, int[] edgeSequenceToCheck) {
-        boolean matchFound = false;
-        int rightNodeIndex = -1;
-        for (int i = 0; i < rightGraph.graphOrder; i++) {
-            if (nodeFlags[i] == false) {
-                rightNodeIndex = i;
-                matchFound = matchNodes(leftNodeIndex, rightNodeIndex, leftGraph, rightGraph, edgeSequenceToCheck);
-                if (matchFound == true) {
-                    nodeFlags[i] = true;
-                    return matchFound;
-                }
-            }
-        }
-        return matchFound;
-    }
-
-    public static boolean matchNodes(int leftNodeIndex, int rightNodeIndex, Graph leftGraph, Graph rightGraph, int[] edgeSequenceToCheck) {
-        boolean matchFound = false;
-        if (leftGraph.degreeSequence[leftNodeIndex] == rightGraph.degreeSequence[rightNodeIndex]) {
-            matchFound = matchEdges(leftNodeIndex, rightNodeIndex, leftGraph, rightGraph);
-            
-        }
-        return matchFound;
-    }
-
-    public static boolean matchEdges(int leftNodeIndex, int rightNodeIndex, Graph leftGraph, Graph rightGraph) {
-        boolean matchFound = false;
-        int numberOfEdges = leftGraph.degreeSequence[leftNodeIndex];
-        int edgeIndex = 0;
-        boolean[] edgesMatchedFlags = new boolean[numberOfEdges];
-        for (int i = 0; i < edgesMatchedFlags.length; i++) {
-            edgesMatchedFlags[i] = false;
-        }
-        //Check for all possible edges
-        for (int i = 0; i < leftGraph.adjMat[leftNodeIndex].length; i++) {
-            //If an edge is found
-            if (leftGraph.adjMat[leftNodeIndex][i] == 1) {
-                //Then check for all possible edges in the right graph    
-                for (int j = 0; j < rightGraph.adjMat[rightNodeIndex].length; j++) {
-                    //If an edge is found in the right graph
-                    if (rightGraph.adjMat[rightNodeIndex][j] == 1) {
-                        //And if that edge hasn't already been "matched"    
-                        if (edgesMatchedFlags[edgeIndex] == false) {
-                            //Then check if the degree of the vertices on the opposite ends of both of these edges are equal
-                            if (leftGraph.degreeSequence[i] == rightGraph.degreeSequence[j]) {
-                                //If so, then an edge match is found
-                                edgesMatchedFlags[j] = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        //Check that we've successfully matched our edges one-to-one (none are unmatched)
-        for (int i = 0; i < edgesMatchedFlags.length; i++) {
-            //If even one is unmatched, then node1 can not be isomorphic to node2
-            if (edgesMatchedFlags[i] == false) {
-                matchFound = false;
-                return matchFound;
-            }
-        }
-
-        matchFound = true;
-        return matchFound;
-    }
-
-
-
-
-
-
-
-
-
-
 
     //Checks if an isomorphism exists between two graphs by using a search tree to narrow the possible vertex mappings
     public static boolean areGraphsIsomorphicTreeSearch(Graph leftGraph, Graph rightGraph) {
-        boolean graphsAreIsomorphic = false;
-        boolean possibleIsomorphismFound = false;
+        boolean isomorphismFound = false;
+        
         //First check all the easy requirements for isomorphism
         if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
             //Create root and first level of tree. For easier indexing, root is at level -1 with children at level 0
             IsomorphimTreeNode root = IsomorphimTreeNode.createInitialTree(leftGraph.graphOrder);
             int currentLevel = 0;
-            ArrayList<Integer> currentSequence;
+            ArrayList<Integer> currentSequence = new ArrayList<Integer>();
             //Check each branch of this first level
             for (int i = 0; i < leftGraph.graphOrder; i++) {
                 //Get vertexIndex from child node
@@ -224,72 +102,61 @@ public class GraphExaminer {
                 //Compare if degree of left graph's vertex at given index matches degree of right graph's vertex at index equal to current tree level
                 if (leftGraph.degreeSequence[currentVertexIndex] == rightGraph.degreeSequence[currentLevel]) {
                     //This vertex is a possible match since their degrees are the same. Now recursively check children for matches
-                    currentSequence = new ArrayList<Integer>();
                     currentSequence.add(Integer.valueOf(currentVertexIndex));
-                    possibleIsomorphismFound = recursivelyCheckChildren(root.children.get(i), currentSequence, currentLevel + 1, leftGraph.graphOrder, leftGraph.degreeSequence, rightGraph.degreeSequence);
+                    isomorphismFound = recursivelyCheckChildren(root.children.get(i), currentSequence, currentLevel + 1, leftGraph.graphOrder, leftGraph, rightGraph);
+                    if (isomorphismFound == true) {
+                        return true;
+                    }
+                    currentSequence.remove(currentSequence.size() - 1);
                 }
             }
         }
-        return graphsAreIsomorphic;
+        return false;
     }
 
-    public static boolean recursivelyCheckChildren(IsomorphimTreeNode currentNode, ArrayList<Integer> currentSequence, int currentLevel, int totalVertexCount, int[] leftDegSeq, int[] rightDegSeq) {
+    public static boolean recursivelyCheckChildren(IsomorphimTreeNode currentNode, ArrayList<Integer> currentSequence, int currentLevel, int totalVertexCount, Graph leftGraph, Graph rightGraph) {
+        boolean isomorphismFound = false;
         //If our currentSequence size is equal to our total vertex count minus one, then we have a possible isomorphism
-        if (currentSequence.size() == totalVertexCount - 1) {
-            return true;
+        if (currentSequence.size() == totalVertexCount) {
+            //Check adjacencies for the sequence from the root to this leaf
+            // System.out.print("Possible isomorphism found with: ");
+            // for (int i = 0; i < currentSequence.size(); i++) {
+            //     System.out.print(currentSequence.get(i));
+            // }
+            // System.out.println();
+            int[] possibleSequence = new int[currentSequence.size()];
+            for (int i = 0; i < possibleSequence.length; i++) {
+                possibleSequence[i] = currentSequence.get(i);
+            }
+            if (checkAdjacenciesAcrossMap(leftGraph, rightGraph, possibleSequence) == true) {
+                //System.out.println("Isomorphism confirmed.");
+                return true;
+            } else {
+                return false;
+            }
+            
         }
         //First generate the child sequence
         int[] childSequence = generateChildSequence(currentSequence, totalVertexCount);
-        
-        boolean possibleIsomorphism = false;
+
         IsomorphimTreeNode.generateChildren(currentNode, childSequence);
 
         for (int i = 0; i < childSequence.length; i++) {
             int currentVertexIndex = currentNode.children.get(i).vertexIndex;
 
-            if (leftDegSeq[currentVertexIndex] == rightDegSeq[currentLevel]) {
+            if (leftGraph.degreeSequence[currentVertexIndex] == rightGraph.degreeSequence[currentLevel]) {
                 currentSequence.add(Integer.valueOf(currentVertexIndex));
-                possibleIsomorphism = recursivelyCheckChildren(currentNode.children.get(i), currentSequence, currentLevel + 1, totalVertexCount, leftDegSeq, rightDegSeq);
-            }
-            if (possibleIsomorphism == true) {
-                return true;
-            } else {
-                
+                isomorphismFound = recursivelyCheckChildren(currentNode.children.get(i), currentSequence, currentLevel + 1, totalVertexCount, leftGraph, rightGraph);
+                if (isomorphismFound == true) {
+                    return true;
+                }
+                currentSequence.remove(currentSequence.size() - 1);
             }
         }
         
         return false;
     }
 
-
-
-    public static int[] generateChildSequence(int[] currentlyUsedSequence, int vertexCount) {
-        //Create sequence array of appropriate length
-        int[] childSequence = new int[vertexCount - currentlyUsedSequence.length];
-        int childSequenceIndex = 0;
-        boolean skipThisI;
-        //Try to fill in sequence array
-        for (int i = 0; i < vertexCount; i++) {
-            skipThisI = false;
-            //Check if the current i value is in currentlyUsedSequence
-            for (int j = 0; j < currentlyUsedSequence.length; j++) {
-                if (i == currentlyUsedSequence[j]) {
-                    skipThisI = true;
-                    break;
-                }
-            }
-            if (skipThisI == false) {
-                childSequence[childSequenceIndex] = i;
-                childSequenceIndex++;
-            }
-        }
-        return childSequence;
-    }
-
-    //currentlyUsedSequence = {3}, vertexCount = 4
-    //childSequence returned = {0,1,2}
-    //currentlyUsedSequence = {1,3}, vertexCount = 7
-    //childSequence returned = {0,2,4,5,6,7}
     public static int[] generateChildSequence(ArrayList<Integer> currentlyUsedSequence, int vertexCount) {
         //Create sequence array of appropriate length
         int[] childSequence = new int[vertexCount - currentlyUsedSequence.size()];

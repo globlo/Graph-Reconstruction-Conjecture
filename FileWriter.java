@@ -60,4 +60,22 @@ public class FileWriter {
 			e.printStackTrace();
 		}
    }
+
+   public static void writeG6ArrayToFile(char[][] g6Graphs, String fileName){
+        try{
+            PrintWriter outputFile = new PrintWriter(fileName);
+            for (int i = 0; i < g6Graphs.length; i++) {
+                for (int j = 0; j < g6Graphs[i].length; j++) {
+                    outputFile.print(g6Graphs[i][j]);
+                }
+                if (i != g6Graphs.length - 1) {
+                    outputFile.print('\n');
+                }
+            }
+            outputFile.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

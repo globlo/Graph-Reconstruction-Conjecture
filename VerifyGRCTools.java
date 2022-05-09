@@ -1,45 +1,68 @@
 import java.util.ArrayList;
 
+
+
 public class VerifyGRCTools {
 
-    public static void verifyTheKocayGraphsFromTheCubicGraphsInThisFileForGRC(String inputFile, int numOfG6InFile, int sizeOfG6InFile) {
-        //Step 1, Read G6 from input file
-        System.out.println("Step 1 ------------------------------------------------------------------------------------------------------ ");
-        char[][] arrayOfG6 = FileReader.readG6FromFile(inputFile, numOfG6InFile, sizeOfG6InFile);
-        //Debug for step 1
-        System.out.println("G6 items read: ");
-        for (int i = 0; i < arrayOfG6.length; i++) {
-            for (int j = 0; j < arrayOfG6[0].length; j++) {
-                System.out.print(arrayOfG6[i][j]);
+    public static boolean debug = true;
+
+    public static Graph[] convertG6ArrayIntoGraphArray(char[][] g6Array) {
+        Graph[] arrayOfCubicGraphs = new Graph[g6Array.length];
+        for (int i = 0; i < arrayOfCubicGraphs.length; i++) {
+            arrayOfCubicGraphs[i] = new Graph(MiscTools.graph6_to_matrix(g6Array[i]));
+        }
+
+        if (debug == true) {
+            System.out.println("Converted G6 graphs:");
+            for (int i = 0; i < g6Array.length; i++) {
+                for (int j = 0; j < g6Array[0].length; j++) {
+                    System.out.print(g6Array[i][j]);
+                }
+                System.out.println();
             }
-            System.out.println();
+            System.out.println("\ninto the following Graph Objects:");
+            for (int i = 0; i < arrayOfCubicGraphs.length; i++) {
+                arrayOfCubicGraphs[i].printGraph();
+                System.out.println();
+            }
         }
 
+        return arrayOfCubicGraphs;
+    }
 
-        //Step 2, convert G6 into Graph Objects
-        System.out.println("Step 2 ------------------------------------------------------------------------------------------------------ ");
-        Graph[] arrayOfCubicGraphs = new Graph[numOfG6InFile];
-        for (int i = 0; i < arrayOfCubicGraphs.length; i++) {
-            arrayOfCubicGraphs[i] = new Graph(MiscTools.graph6_to_matrix(arrayOfG6[i]));
+    public static char[][] convertGraphArrayIntoG6Array(Graph[] graphArray) {
+        int lengthOfG6Element = MiscTools.matrix_to_graph6(graphArray[0].adjMat).length;
+        char[][] arrayOfG6 = new char[graphArray.length][lengthOfG6Element];
+        for (int i = 0; i < arrayOfG6.length; i++) {
+            arrayOfG6[i] = MiscTools.matrix_to_graph6(graphArray[i].adjMat);
         }
-        //Debug for step 2
-        System.out.println("Converted G6 into the following graphs:");
-        for (int i = 0; i < arrayOfCubicGraphs.length; i++) {
-            arrayOfCubicGraphs[i].printGraph();
-            System.out.println();
-        }
-        
 
-        //Step 3, Generate Kocay graphs from these graph objects
-        //Number of generated kocay graphs for a single cubic graph will be (numOfVertices * 3 / 2) 
-        //3 edges for each vertex, but since it's undirected, each each is counted twice
-        System.out.println("Step 3 ------------------------------------------------------------------------------------------------------ ");
-        int numberOfKocayGraphsPerCubicGraph = ((arrayOfCubicGraphs[0].graphOrder * 3) / 2);
-        Graph[][] kocayGraphMatrix = new Graph[arrayOfCubicGraphs.length][numberOfKocayGraphsPerCubicGraph];
+        if (debug == true) {
+            System.out.println("Converted Graphs:");
+            for (int i = 0; i < graphArray.length; i++) {
+                graphArray[i].printGraph();
+                System.out.println();
+            }
+            System.out.println("into the following G6 array:");
+            for (int i = 0; i < arrayOfG6.length; i++) {
+                for (int j = 0; j < arrayOfG6[0].length; j++) {
+                    System.out.print(arrayOfG6[i][j]);
+                }
+                System.out.println();
+            }
+        }
+
+        return arrayOfG6;
+    }
+
+
+    public static Graph[] generateAllKocayGraphsFromCubicGraphArr(Graph[] cubicGraphArr) {
+        int numberOfKocayGraphsPerCubicGraph = ((cubicGraphArr[0].graphOrder * 3) / 2);
+        Graph[][] kocayGraphMatrix = new Graph[cubicGraphArr.length][numberOfKocayGraphsPerCubicGraph];
         for (int i = 0; i < kocayGraphMatrix.length; i++) {
-            kocayGraphMatrix[i] = KocayGraphGenerator.generateKocayGraphs(arrayOfCubicGraphs[i]);
+            kocayGraphMatrix[i] = KocayGraphGenerator.generateKocayGraphs(cubicGraphArr[i]);
         }
-        Graph[] kocayGraphArr = new Graph[numberOfKocayGraphsPerCubicGraph * arrayOfCubicGraphs.length];
+        Graph[] kocayGraphArr = new Graph[numberOfKocayGraphsPerCubicGraph * cubicGraphArr.length];
         int kocayGraphIndex = 0;
         for (int i = 0; i < kocayGraphMatrix.length; i++) {
             for (int j = 0; j < kocayGraphMatrix[i].length; j++) {
@@ -47,29 +70,17 @@ public class VerifyGRCTools {
                 kocayGraphIndex++;
             }
         }
-        //Debug for step 3
-        System.out.println("Kocay graphs generated: " + kocayGraphArr.length);
-        // for (int i = 0; i < kocayGraphArr.length; i++) {
-        //     kocayGraphArr[i].printGraph();
-        //     System.out.println();
-        // }
 
-        //Step 4, Prune kocayGraphArray into smaller kocayGraphArray that has no isomorphic graphs
-        System.out.println("Step 4 ------------------------------------------------------------------------------------------------------ ");
-        Graph[] nonIsomorphicKocayGraphs = removeIsomorphicGraphsFromArray(kocayGraphArr);
-        //Debug for step 4
-        System.out.println("Kocay graphs left over: " + nonIsomorphicKocayGraphs.length);
-        for (int i = 0; i < nonIsomorphicKocayGraphs.length; i++) {
-            nonIsomorphicKocayGraphs[i].printGraph();
-            System.out.println();
+        if (debug == true) {
+            System.out.println("Kocay graphs generated: " + kocayGraphArr.length);
+            // for (int i = 0; i < kocayGraphArr.length; i++) {
+            //     kocayGraphArr[i].printGraph();
+            //     System.out.println();
+            // }
         }
 
-        //Step 5, check array of non isomorphic kocay graphs to see if any two graphs share the same deck
-        Boolean GRCHolds = checkTheseNonIsomorphicKocayGraphsForCounterExample(nonIsomorphicKocayGraphs);
-
+        return kocayGraphArr;
     }
-
-
 
     public static boolean checkTheseNonIsomorphicKocayGraphsForCounterExample(Graph[] nonIsoKocayGraphArr) {
         Boolean GRCHolds = true;
@@ -80,7 +91,7 @@ public class VerifyGRCTools {
             for (int j = i + 1; j < nonIsoKocayGraphArr.length; j++) {
                 innerDeck = Deck.createDeckFromGraph(nonIsoKocayGraphArr[j]);
                 if (DeckExaminer.areTheseDecksIdentical(outerDeck, innerDeck)) {
-                    System.out.println("Either we've got an error in our code (Likely) or we've got a counterexample to the GRC:");
+                    System.out.println("Possible counter example found:");
                     System.out.println("Graph A:");
                     nonIsoKocayGraphArr[i].printGraph();
                     System.out.println("Graph B:");
@@ -92,7 +103,6 @@ public class VerifyGRCTools {
                 }
             }
         }
-        System.out.println("No graphs in this nonIsomorphic kocay array share the same deck.");
         return GRCHolds;
     }
 
@@ -110,7 +120,7 @@ public class VerifyGRCTools {
             for (int j = 0; j < nonIsomorphicGraphsArrList.size(); j++) {
                 System.out.print("\nComparing graph " + (i + 1) + "/" + graphsToCheck.length + " to " + (j + 1) + "/" + nonIsomorphicGraphsArrList.size() + " in our non isomorphic list. ");
                 //If the graph at graphsToCheck[i] is isomorphic to ANY graph in our non-isomorphic graph arrayList, then we know it will not be added
-                if (GraphExaminer.areGraphsIsomorphicBruteForceV1(graphsToCheck[i], nonIsomorphicGraphsArrList.get(j)) == true) {
+                if (GraphExaminer.areGraphsIsomorphic(graphsToCheck[i], nonIsomorphicGraphsArrList.get(j)) == true) {
                     //Isomorphism found, exist inner loop and begin checking next graph in graphsToCheck
                     System.out.println("Graph " + (i + 1) + "/" + graphsToCheck.length + " is isomorphic to " + (j + 1) + "/" + nonIsomorphicGraphsArrList.size() + " in our non isomorphic list.");
                     break;
@@ -126,7 +136,6 @@ public class VerifyGRCTools {
                 }
             }
         }
-
         Graph[] nonIsomorphicGraphs = nonIsomorphicGraphsArrList.toArray(new Graph[nonIsomorphicGraphsArrList.size()]);
         return nonIsomorphicGraphs;
     }
