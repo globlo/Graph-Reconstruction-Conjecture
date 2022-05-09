@@ -28,6 +28,7 @@ public class VerifyGRCTools {
             arrayOfCubicGraphs[i].printGraph();
             System.out.println();
         }
+        
 
         //Step 3, Generate Kocay graphs from these graph objects
         //Number of generated kocay graphs for a single cubic graph will be (numOfVertices * 3 / 2) 
@@ -48,10 +49,10 @@ public class VerifyGRCTools {
         }
         //Debug for step 3
         System.out.println("Kocay graphs generated: " + kocayGraphArr.length);
-        for (int i = 0; i < kocayGraphArr.length; i++) {
-            kocayGraphArr[i].printGraph();
-            System.out.println();
-        }
+        // for (int i = 0; i < kocayGraphArr.length; i++) {
+        //     kocayGraphArr[i].printGraph();
+        //     System.out.println();
+        // }
 
         //Step 4, Prune kocayGraphArray into smaller kocayGraphArray that has no isomorphic graphs
         System.out.println("Step 4 ------------------------------------------------------------------------------------------------------ ");
@@ -101,15 +102,17 @@ public class VerifyGRCTools {
         ArrayList<Graph> nonIsomorphicGraphsArrList = new ArrayList<Graph>();
         //We can safely add the first graph since it's impossible for it to be isomorphic to anything in our empty arrayList
         nonIsomorphicGraphsArrList.add(graphsToCheck[0]);
+        System.out.println("Adding graph 1/" + graphsToCheck.length + " to non isomorphic list.");
 
         //Iterate over all remaining graphs in graphsToCheck
         for (int i = 1; i < graphsToCheck.length; i++) {
             //Compare the graph at graphsToCheck[i] with every graph currently in our non-isomorphic graph arraylist
             for (int j = 0; j < nonIsomorphicGraphsArrList.size(); j++) {
-                System.out.println(i + "/" + graphsToCheck.length + " , " + j + "/" + nonIsomorphicGraphsArrList.size());
+                System.out.print("\nComparing graph " + (i + 1) + "/" + graphsToCheck.length + " to " + (j + 1) + "/" + nonIsomorphicGraphsArrList.size() + " in our non isomorphic list. ");
                 //If the graph at graphsToCheck[i] is isomorphic to ANY graph in our non-isomorphic graph arrayList, then we know it will not be added
                 if (GraphExaminer.areGraphsIsomorphicBruteForceV1(graphsToCheck[i], nonIsomorphicGraphsArrList.get(j)) == true) {
                     //Isomorphism found, exist inner loop and begin checking next graph in graphsToCheck
+                    System.out.println("Graph " + (i + 1) + "/" + graphsToCheck.length + " is isomorphic to " + (j + 1) + "/" + nonIsomorphicGraphsArrList.size() + " in our non isomorphic list.");
                     break;
                 } else {
                     //If we've reached the last graph in our non-isomorphic list, and never triggered our break for isomorphism found, then we can add
@@ -117,6 +120,7 @@ public class VerifyGRCTools {
                     if (j == nonIsomorphicGraphsArrList.size() - 1) {
                         //GraphsToCheck[i] is not isomorphic to any graph in nonIsomorphicGraphsArrList, so add it to the list and break from the innter loop
                         nonIsomorphicGraphsArrList.add(graphsToCheck[i]);
+                        System.out.println("Graph " + (i + 1) + "/" + graphsToCheck.length + " is NOT isomorphic to anything in our non isomorphic list, so add it to the list. New list size is: " + nonIsomorphicGraphsArrList.size());
                         break;
                     }
                 }
