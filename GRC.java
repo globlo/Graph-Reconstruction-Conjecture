@@ -12,10 +12,10 @@ public class GRC {
 
     //Save the generated non-isomorphic kocay graphs the the output file specified below
     public static boolean saveNonIsoKocaysToFile = true;
-    public static String nonIsomorphicG6KocayOutputFileName = "nonIsoKocayGraphs.g6";
+    public static String nonIsomorphicG6KocayOutputFileName = "_nonIsoKocayGraphs.g6";
 
     //Input file information. Given the finite nature of cubic graphs in G6 format, we felt it acceptable to manually enter dimensions of file
-    public static String inputCubicGraphFileName = "cub08.g6";
+    public static String inputCubicGraphFileName = "_cub08.g6";
     public static int numberOfG6InFile = 5;
     public static int lenghtOfG6InFile = 6;
 
@@ -64,6 +64,5 @@ public class GRC {
         long endProgramTime = System.currentTimeMillis();
         System.out.println("\nHot dog! We did all that in just: " + (endProgramTime - startProgramTime) + " milli seconds");
 
-        FeatureTesting.pruningGraphArrByIsomorphisms();
     }
 }
