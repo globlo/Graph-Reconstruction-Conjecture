@@ -15,24 +15,24 @@ public class GRC {
     //Check for triangle count without using recursion (Yuck!)
     public static boolean checkTrianglesNonrecurisveWay = true;
     //Relabel graphs before trying to check for isomorphism
-    public static boolean relabelBeforeIsoChecks = false;
+    public static boolean relabelBeforeIsoChecks = true;
 
     //Save the generated non-isomorphic kocay graphs the the output file specified below
     public static boolean saveNonIsoKocaysToFile = true;
     public static String nonIsomorphicG6KocayOutputFileName = "_nonIsoKocayGraphs.g6";
 
     //Input file information. Given the finite nature of cubic graphs in G6 format, we felt it acceptable to manually enter dimensions of file
-    public static String inputCubicGraphFileName = "_cub08.g6";
-    public static int numberOfG6InFile = 5;
-    public static int lenghtOfG6InFile = 6;
-    // public static String inputCubicGraphFileName = "_nonIsoKocayGraphs.g6";
-    // public static int numberOfG6InFile = 19;
-    // public static int lenghtOfG6InFile = 12;
+    public static String inputCubicGraphFileName = "_cub12FirstTwo.g6";
+    public static int numberOfG6InFile = 2;
+    public static int lenghtOfG6InFile = 12;
 
     public static void main(String[] args) {
+        demonstrateVerification();
+    }
+
+    public static void demonstrateVerification() {
         long startProgramTime = System.nanoTime();
         
-
         //Step 1: Read G6 from input file
         if(debug){System.out.println("\n-------------------------------------------------------------------- Step 1 --------------------------------------------------------------------");}
         char[][] arrayOfG6 = FileReader.readG6FromFile(inputCubicGraphFileName, numberOfG6InFile, lenghtOfG6InFile);
@@ -79,9 +79,8 @@ public class GRC {
         }
 
         long endProgramTime = System.nanoTime();
-        System.out.println("\nHot dog! We did all that in just: " + (endProgramTime - startProgramTime) + " nano-seconds");
-
-        System.out.println("Parameters:\nBruteForceIsoCheck: " + useBruteForceIsomorphismCheck);
+        
+        System.out.println("\nBruteForceIsoCheck: " + useBruteForceIsomorphismCheck);
         System.out.println("Triangle Checking: " + checkTrianglesBeforeIsoChecks);
         System.out.println("Non-recursive Triangle Checking: " + checkTrianglesNonrecurisveWay);
         System.out.println("Square Checking: " + checkSquaresBeforeIsoChecks);
@@ -89,6 +88,6 @@ public class GRC {
         System.out.println("Time to generate kocay graphs: " + (timeToGenerateKocayArrEnd - timeToGenerateKocayArrStart) + " nano-seconds");
         System.out.println("Time to remove isomorphic kocay graphs: " + (timeToGenerateNonIsomorphicKocayArrEnd - timeToGenerateNonIsomorphicKocayArrStart) + " nano-seconds");
         System.out.println("Time to check non-isomorphic kocay graphs: " + (timeToCheckNonIsomorphicKocayArrEnd - timeToCheckNonIsomorphicKocayArrStart) + " nano-seconds");
-
+        System.out.println("Total Program time: " + (endProgramTime - startProgramTime) + " nano-seconds");
     }
 }
