@@ -9,7 +9,7 @@ public class VerifyGRCTools {
     public static Graph[] convertG6ArrayIntoGraphArray(char[][] g6Array) {
         Graph[] arrayOfCubicGraphs = new Graph[g6Array.length];
         for (int i = 0; i < arrayOfCubicGraphs.length; i++) {
-            arrayOfCubicGraphs[i] = new Graph(MiscTools.graph6_to_matrix(g6Array[i]));
+            arrayOfCubicGraphs[i] = new Graph(MiscTools.graph6ToMatrix(g6Array[i]));
         }
 
         if (debug == true) {
@@ -31,10 +31,10 @@ public class VerifyGRCTools {
     }
 
     public static char[][] convertGraphArrayIntoG6Array(Graph[] graphArray) {
-        int lengthOfG6Element = MiscTools.matrix_to_graph6(graphArray[0].adjMat).length;
+        int lengthOfG6Element = MiscTools.matrixToGraph6(graphArray[0].adjMat).length;
         char[][] arrayOfG6 = new char[graphArray.length][lengthOfG6Element];
         for (int i = 0; i < arrayOfG6.length; i++) {
-            arrayOfG6[i] = MiscTools.matrix_to_graph6(graphArray[i].adjMat);
+            arrayOfG6[i] = MiscTools.matrixToGraph6(graphArray[i].adjMat);
         }
 
         if (debug == true) {
