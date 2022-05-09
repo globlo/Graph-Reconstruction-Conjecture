@@ -70,6 +70,7 @@ public class FileReader {
             scanner.close();
 
             for (int i = 0; i < arrayOfG6.length; i++) {
+                
                 arrayOfG6[i] = stringArr[i].toCharArray();
             }
             

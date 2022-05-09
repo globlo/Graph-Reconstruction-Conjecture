@@ -249,8 +249,25 @@ public class FeatureTesting {
     }
 
     //Testing Count # of cycle in Graph
-    // public static void cycleCounting(Graph graphToLookAt, int lengthOfCyclesToFind) {
-    //     System.out.println("There are " + GraphExaminer.countCycles(graphToLookAt.adjMat, lengthOfCyclesToFind) + " cycles of length " + lengthOfCyclesToFind + " in the following Graph: ");
-    //     graphToLookAt.printGraph();
-    // }
+    public static void cycleCounting(Graph graphToLookAt, int lengthOfCyclesToFind) {
+        System.out.println("There are " + GraphExaminer.countCycles(graphToLookAt.adjMat, lengthOfCyclesToFind) + " cycles of length " + lengthOfCyclesToFind + " in the following Graph: ");
+        graphToLookAt.printGraph();
+    }
+
+    //Testing counting triangles via cycle counting vs triangle counting
+    public static void triangleCounting() {
+        Graph sampleGraph = FileReader.readGraphFromFile("_sampleCubic12.txt");
+        long startFunctionTime = System.nanoTime();
+        System.out.println(startFunctionTime);
+        int numberOfTriangles = GraphExaminer.countCycles(sampleGraph.adjMat, 3);
+        long endFunctionTime = System.nanoTime();
+        System.out.println(endFunctionTime);
+        System.out.println("Cycle counter found " + numberOfTriangles + " triangles in " + (endFunctionTime - startFunctionTime) + " nano seconds");
+
+        startFunctionTime = System.nanoTime();
+        numberOfTriangles = GraphExaminer.countNumberOfTriangles(sampleGraph);
+        endFunctionTime = System.nanoTime();
+        System.out.println("Triangle counter found " + numberOfTriangles + " triangles in " + (endFunctionTime - startFunctionTime) + " nano seconds");
+        //Ur darn right it's ~10x faster
+    }
 }

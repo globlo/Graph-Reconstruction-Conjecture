@@ -66,6 +66,12 @@ public class MiscTools {
         }
     }
 
+    public static void setIntArrayToNegativeOnes(int[] arrayToSet) {
+        for (int i = 0; i < arrayToSet.length; i++) {
+            arrayToSet[i] = -1;
+        }
+    }
+
     //Checks if an adjacency matrix represents a valid graph. For this program, valid means: Unweighted, Undirected, and no loops (Vertex connected to itself)
     //This means it's adjacency matrix should be square, mirrored, edge weights of only 1, and it's diaganols should all be zero
     public static boolean isMatrixValidGraph(int[][] matrixToCheck) {

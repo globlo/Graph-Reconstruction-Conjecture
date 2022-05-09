@@ -9,18 +9,26 @@ public class GRC {
 
     //Use brute force approach for chekcing for isomorphism. If false, instead use tree search approach
     public static boolean useBruteForceIsomorphismCheck = false;
+    //Check that two graphs have the same amount of triangle and or squares before checking for isomorphism
+    public static boolean checkTrianglesBeforeIsoChecks = false;
+    public static boolean checkSquaresBeforeIsoChecks = false;
+    //Check for triangle count without using recursion (Yuck!)
+    public static boolean checkTrianglesMichaelsWay = false;
+    //Relabel graphs before trying to check for isomorphism
+    public static boolean relabelBeforeIsoChecks = false;
 
     //Save the generated non-isomorphic kocay graphs the the output file specified below
     public static boolean saveNonIsoKocaysToFile = true;
     public static String nonIsomorphicG6KocayOutputFileName = "_nonIsoKocayGraphs.g6";
 
     //Input file information. Given the finite nature of cubic graphs in G6 format, we felt it acceptable to manually enter dimensions of file
-    public static String inputCubicGraphFileName = "_cub08.g6";
-    public static int numberOfG6InFile = 5;
-    public static int lenghtOfG6InFile = 6;
+    public static String inputCubicGraphFileName = "_cub12FirstTwo.g6";
+    public static int numberOfG6InFile = 2;
+    public static int lenghtOfG6InFile = 12;
 
     public static void main(String[] args) {
-        long startProgramTime = System.currentTimeMillis();
+        long startProgramTime = System.nanoTime();
+        
 
         //Step 1: Read G6 from input file
         if(debug){System.out.println("\n-------------------------------------------------------------------- Step 1 --------------------------------------------------------------------");}
@@ -34,11 +42,15 @@ public class GRC {
         //The number of generated kocay graphs for a single cubic graph will be (numOfVertices * 3 / 2)
         //3 edges for each vertex, but since it's undirected, each each is counted twice
         if(debug){System.out.println("\n-------------------------------------------------------------------- Step 3 --------------------------------------------------------------------");}
+        long timeToGenerateKocayArrStart = System.nanoTime();
         Graph[] kocayGraphsArr = VerifyGRCTools.generateAllKocayGraphsFromCubicGraphArr(cubicGraphArr);
-
+        long timeToGenerateKocayArrEnd = System.nanoTime();
+        
         //Step 4: Prune kocayGraphArray into smaller kocayGraphArray that has no isomorphic graphs
         if(debug){System.out.println("\n-------------------------------------------------------------------- Step 4 --------------------------------------------------------------------");}
+        long timeToGenerateNonIsomorphicKocayArrStart = System.nanoTime();
         Graph[] nonIsomorphicKocayGraphs = VerifyGRCTools.removeIsomorphicGraphsFromArray(kocayGraphsArr);
+        long timeToGenerateNonIsomorphicKocayArrEnd = System.nanoTime();
 
         //Optional Steps: Save these non-isomorphic graphs to a file so you don't need to generate them again in the future
         if (saveNonIsoKocaysToFile == true) {
@@ -54,15 +66,25 @@ public class GRC {
 
         //Step 5: Check array of non isomorphic kocay graphs to see if any two graphs share the same deck
         if(debug){System.out.println("\n-------------------------------------------------------------------- Step 5 --------------------------------------------------------------------");}
+        long timeToCheckNonIsomorphicKocayArrStart = System.nanoTime();
         boolean grcHolds = VerifyGRCTools.checkTheseNonIsomorphicKocayGraphsForCounterExample(nonIsomorphicKocayGraphs);
+        long timeToCheckNonIsomorphicKocayArrEnd = System.nanoTime();
         if (grcHolds == true) {
             System.out.println("No graphs in the non-isomorphic kocay array share the same deck.");
         } else {
             System.out.println("Either we've got an error in our code (Likely) or we've got a counterexample to the GRC!");
         }
 
-        long endProgramTime = System.currentTimeMillis();
-        System.out.println("\nHot dog! We did all that in just: " + (endProgramTime - startProgramTime) + " milli seconds");
+        long endProgramTime = System.nanoTime();
+        System.out.println("\nHot dog! We did all that in just: " + (endProgramTime - startProgramTime) + " nano-seconds");
 
+        System.out.println("Parameters:\nBruteForceIsoCheck: " + useBruteForceIsomorphismCheck);
+        System.out.println("Triangle Checking: " + checkTrianglesBeforeIsoChecks);
+        System.out.println("Non-recursive Triangle Checking: " + checkTrianglesMichaelsWay);
+        System.out.println("Square Checking: " + checkSquaresBeforeIsoChecks);
+        System.out.println("Relabeling used: " + relabelBeforeIsoChecks);
+        System.out.println("Time to generate kocay graphs: " + (timeToGenerateKocayArrEnd - timeToGenerateKocayArrStart) + " nano-seconds");
+        System.out.println("Time to remove isomorphic kocay graphs: " + (timeToGenerateNonIsomorphicKocayArrEnd - timeToGenerateNonIsomorphicKocayArrStart) + " nano-seconds");
+        System.out.println("Time to check non-isomorphic kocay graphs: " + (timeToCheckNonIsomorphicKocayArrEnd - timeToCheckNonIsomorphicKocayArrStart) + " nano-seconds");
     }
 }

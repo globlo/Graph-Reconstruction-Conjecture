@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 //GRC Project
 //GraphExaminer.java
 
@@ -58,26 +57,57 @@ public class GraphExaminer {
     }
 
     public static boolean areGraphsIsomorphic(Graph leftGraph, Graph rightGraph) {
-        if (GRC.useBruteForceIsomorphismCheck == true) {
-            return areGraphsIsomorphicBruteForce(leftGraph, rightGraph);
+        //First check all the easy requirements for isomorphism
+        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            //Next check that the triangle count is the same if enabled
+            if (GRC.checkTrianglesBeforeIsoChecks == true) {
+                //Are we counting triangles Michael's way? (The cool way)
+                if (GRC.checkTrianglesMichaelsWay == true) {
+                    int numberOfTrianglesInLeftGraph = countNumberOfTriangles(leftGraph);
+                    int numberOfTrianglesInrightGraph = countNumberOfTriangles(rightGraph);
+                    if (numberOfTrianglesInLeftGraph != numberOfTrianglesInrightGraph) {
+                        return false;
+                    }
+                } else {
+                    int numberOfTrianglesInLeftGraph = countCycles(leftGraph.adjMat, 3);
+                    int numberOfTrianglesInrightGraph = countCycles(rightGraph.adjMat, 3);
+                    if (numberOfTrianglesInLeftGraph != numberOfTrianglesInrightGraph) {
+                        return false;
+                    }
+                }
+            }
+
+            //Next check that the Square count is the same if enabled
+            if (GRC.checkSquaresBeforeIsoChecks == true) {
+                int numberOfSquaresInLeftGraph = countCycles(leftGraph.adjMat, 4);
+                int numberOfSquaresInrightGraph = countCycles(rightGraph.adjMat, 4);
+                if (numberOfSquaresInLeftGraph != numberOfSquaresInrightGraph) {
+                    return false;
+                }
+            }
+
+            //Now check for isomorphisms the hard way. Must find a valid vertex mapping such that adjacencies are held
+            if (GRC.useBruteForceIsomorphismCheck == true) {
+                return areGraphsIsomorphicBruteForce(leftGraph, rightGraph);
+            } else {
+                return areGraphsIsomorphicTreeSearch(leftGraph, rightGraph);
+            }
+
         } else {
-            return areGraphsIsomorphicTreeSearch(leftGraph, rightGraph);
+            return false;
         }
     }
 
     //Checks if an isomorphism exists between two graphs by brute forcing all possible vertex mappings
     public static boolean areGraphsIsomorphicBruteForce(Graph leftGraph, Graph rightGraph) {
-        boolean graphsAreIsomorphic = false;
-        //First check all the easy requirements for isomorphism
-        if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
-            //Then check every possible vertex mapping between the two graphs (n! possibilities yipee!)
-            int[][] mappingList = CombinatoricsTools.generateAllPossibleMaps(leftGraph.graphOrder);
-            for (int i = 0; i < mappingList.length; i++) {
-                graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
-                //If at any point we find a valid mapping, then return true
-                if (graphsAreIsomorphic == true) {
-                    return graphsAreIsomorphic;
-                }
+        boolean graphsAreIsomorphic = false;        
+        //Then check every possible vertex mapping between the two graphs (n! possibilities yipee!)
+        int[][] mappingList = CombinatoricsTools.generateAllPossibleMaps(leftGraph.graphOrder);
+        for (int i = 0; i < mappingList.length; i++) {
+            graphsAreIsomorphic = checkAdjacenciesAcrossMap(leftGraph, rightGraph, mappingList[i]);
+            //If at any point we find a valid mapping, then return true
+            if (graphsAreIsomorphic == true) {
+                return graphsAreIsomorphic;
             }
         }
         return graphsAreIsomorphic;
@@ -181,11 +211,6 @@ public class GraphExaminer {
     }
 
 
-
-
-
-
-
     //Creates a graph that is the same as the original graph, less one vertex
     //The first vertex is represented by int Zero, second vertex by int one, etc
     public static Graph creatSubgraphWithRemovedVertex(Graph originalGraph, int vertexNumber) {
@@ -217,77 +242,85 @@ public class GraphExaminer {
         return graphToReturn;
     }
 
-    //return binary with 0 or 1 for each index
-    public static int[] calculateVerticesThatMightNeedAnEdge(Graph graphInput, int[] expectedDegreeSequence) {
-        int[][] graphInputAdjMat = graphInput.adjMat;
-        int[] graphInputDegreeSequence = graphInput.degreeSequence.clone();
+    public static int count = 0;
+    public static void DFS(int graph[][], boolean marked[], int n, int vert, int start) {
+        
+        int V = graph[0].length;
+        // mark the vertex vert as visited
+        marked[vert] = true;
 
-        int[] tmpSeq = expectedDegreeSequence.clone();
-        Arrays.sort(tmpSeq);
-        //Since the expected degree sequence copy is now sorted, we can expect the largest degree to be in the last position of tmpSeq
-        int maxPossibleDegree = tmpSeq[tmpSeq.length - 1];
-
-        int[] verticesMissedSequence = new int[graphInputAdjMat.length];
-
-        //calculate the current sequence in the graph
-        for (int i = 0; i < graphInputAdjMat.length; i++) {
-            //find the vertex that misses edges
-            if (graphInputDegreeSequence[i] < maxPossibleDegree) {
-                verticesMissedSequence[i] = 1;
-            } else {
-                verticesMissedSequence[i] = 0;
-            }
+        // if the path of length (n-1) is found
+        if (n == 0) {
+            marked[vert] = false;   
+            // Check if vertex vert end
+            // with vertex start
+            if (graph[vert][start] == 1) {
+                count++;
+                return;
+            } else
+                return;
         }
-        return verticesMissedSequence;
+         
+        // searching every possible path of length n-1
+        for (int i = 0; i < V; i++){
+            if (!marked[i] && graph[vert][i] == 1){
+                DFS(graph, marked, n-1, i, start);
+            }
+        }    
+                
+        // marking vert as unvisited to make it
+        // usable again
+        marked[vert] = false;
+    }
+     
+    // Count cycles of length N (# of verteces "i.e. Tirangle: n=3") you want to find
+    public static int countCycles(int graph[][], int n) {
+        count = 0;
+        int V = graph[0].length;
+        // all vertex are marked un-visited initially.
+        boolean marked[] = new boolean[V];
+        
+        // Searching for cycle by using v-n-1 vertices
+        // n-1 is the every possile path that 
+        for (int i = 0; i < V - (n - 1); i++) { //n-1 = 4 -> V=6 - 4 = 2
+            DFS(graph, marked, n-1, i, i);  
+            // ith vertex is marked as visited and will not be visited again
+            marked[i] = true;
+        }
+        return count / 2; //every vertex has duplicated path, right round or left round cycle
     }
 
+    //Count the number of triangles in a graph. This method might be faster than the cycle counting method since this is much more specific
+    public static int countNumberOfTriangles(Graph graphToCountFrom) {
+        int numberOfTriangles = 0;
+        int[] verticesAdjacentToVertexI = new int[graphToCountFrom.graphOrder - 1];
+        int currentAdjacentVerticesCount = 0;
 
+        //Check each vertex
+        for (int i = 0; i < graphToCountFrom.graphOrder; i++) {
+            //Check for vertices adjacent to vertex i
+            for (int j = 0; j < graphToCountFrom.graphOrder; j++) {
+                if (graphToCountFrom.adjMat[i][j] == 1) {
+                    //If vertex is adjacent to vertex i, add it to adjacentVerticesArray
+                    verticesAdjacentToVertexI[currentAdjacentVerticesCount] = j;
+                    currentAdjacentVerticesCount++;
+                }
+            }
 
-    // public static int count = 0;
-    // public static void DFS(int graph[][], boolean marked[], int n, int vert, int start) {
-        
-    //     int V = graph[0].length;
-    //     // mark the vertex vert as visited
-    //     marked[vert] = true;
+            //Now that we have all vertices adjacent to i, check if any are adjacent to eachother
+            for (int j = 0; j < currentAdjacentVerticesCount; j++) {
+                for (int k = j; k < currentAdjacentVerticesCount; k++) {
+                   if (graphToCountFrom.adjMat[verticesAdjacentToVertexI[j]][verticesAdjacentToVertexI[k]] == 1) {
+                        numberOfTriangles++;
+                    }
+                }
+            }
 
-    //     // if the path of length (n-1) is found
-    //     if (n == 0) {
-    //         marked[vert] = false;   
-    //         // Check if vertex vert end
-    //         // with vertex start
-    //         if (graph[vert][start] == 1) {
-    //             count++;
-    //             return;
-    //         } else
-    //             return;
-    //     }
-         
-    //     // searching every possible path of length n-1
-    //     for (int i = 0; i < V; i++){
-    //         if (!marked[i] && graph[vert][i] == 1){
-    //             DFS(graph, marked, n-1, i, start);
-    //         }
-    //     }    
-                
-    //     // marking vert as unvisited to make it
-    //     // usable again
-    //     marked[vert] = false;
-    // }
-     
-    // // Count cycles of length N (# of verteces "i.e. Tirangle: n=3") you want to find
-    // public static int countCycles(int graph[][], int n) {
-         
-    //     int V = graph[0].length;
-    //     // all vertex are marked un-visited initially.
-    //     boolean marked[] = new boolean[V];
-        
-    //     // Searching for cycle by using v-n-1 vertices
-    //     // n-1 is the every possile path that 
-    //     for (int i = 0; i < V - (n - 1); i++) { //n-1 = 4 -> V=6 - 4 = 2
-    //         DFS(graph, marked, n-1, i, i);  
-    //         // ith vertex is marked as visited and will not be visited again
-    //         marked[i] = true;
-    //     }
-    //     return count / 2; //every vertex has duplicated path, right round or left round cycle
-    // }
+            //Reset adjacent vertices count before beggining check for next node
+            currentAdjacentVerticesCount = 0;
+        }
+
+        numberOfTriangles = numberOfTriangles / 3;
+        return numberOfTriangles;
+    }
 }
