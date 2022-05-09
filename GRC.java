@@ -25,6 +25,9 @@ public class GRC {
     public static String inputCubicGraphFileName = "_cub12FirstTwo.g6";
     public static int numberOfG6InFile = 2;
     public static int lenghtOfG6InFile = 12;
+    // public static String inputCubicGraphFileName = "_nonIsoKocayGraphs.g6";
+    // public static int numberOfG6InFile = 19;
+    // public static int lenghtOfG6InFile = 12;
 
     public static void main(String[] args) {
         long startProgramTime = System.nanoTime();
