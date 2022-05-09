@@ -89,6 +89,7 @@ public class VerifyGRCTools {
         for (int i = 0; i < nonIsoKocayGraphArr.length; i++) {
             outerDeck = Deck.createDeckFromGraph(nonIsoKocayGraphArr[i]);
             for (int j = i + 1; j < nonIsoKocayGraphArr.length; j++) {
+                if(GRC.debug){System.out.print("Checking if Graph " + (i + 1) + " shares the same deck as Graph " + (j + 1) + "... ");}
                 innerDeck = Deck.createDeckFromGraph(nonIsoKocayGraphArr[j]);
                 if (DeckExaminer.areTheseDecksIdentical(outerDeck, innerDeck)) {
                     System.out.println("Possible counter example found:");
@@ -100,6 +101,8 @@ public class VerifyGRCTools {
                     outerDeck.printDeck();
                     GRCHolds = false;
                     return GRCHolds;
+                } else {
+                    System.out.println("They do not.");
                 }
             }
         }

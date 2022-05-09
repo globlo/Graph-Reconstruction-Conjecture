@@ -59,10 +59,11 @@ public class GraphExaminer {
     public static boolean areGraphsIsomorphic(Graph leftGraph, Graph rightGraph) {
         //First check all the easy requirements for isomorphism
         if ((leftGraph.graphOrder == rightGraph.graphOrder) && (leftGraph.numberOfEdges == rightGraph.numberOfEdges) && (MiscTools.compareSequence(leftGraph.degreeSequence, rightGraph.degreeSequence) == true)) {
+            
             //Next check that the triangle count is the same if enabled
             if (GRC.checkTrianglesBeforeIsoChecks == true) {
                 //Are we counting triangles Michael's way? (The cool way)
-                if (GRC.checkTrianglesMichaelsWay == true) {
+                if (GRC.checkTrianglesNonrecurisveWay == true) {
                     int numberOfTrianglesInLeftGraph = countNumberOfTriangles(leftGraph);
                     int numberOfTrianglesInrightGraph = countNumberOfTriangles(rightGraph);
                     if (numberOfTrianglesInLeftGraph != numberOfTrianglesInrightGraph) {
@@ -88,9 +89,27 @@ public class GraphExaminer {
 
             //Now check for isomorphisms the hard way. Must find a valid vertex mapping such that adjacencies are held
             if (GRC.useBruteForceIsomorphismCheck == true) {
-                return areGraphsIsomorphicBruteForce(leftGraph, rightGraph);
+
+                //Are we using vertex relabeling to sort degree sequence?
+                if (GRC.relabelBeforeIsoChecks == true) {
+                    Graph sortedLeftGraph = leftGraph.createGraphWithSortedLabels();
+                    Graph sortedRightGraph = rightGraph.createGraphWithSortedLabels();
+                    return areGraphsIsomorphicBruteForce(sortedLeftGraph, sortedRightGraph);
+                } else {
+                    return areGraphsIsomorphicBruteForce(leftGraph, rightGraph);
+                }
+                
             } else {
-                return areGraphsIsomorphicTreeSearch(leftGraph, rightGraph);
+
+                //Are we using vertex relabeling to sort degree sequence?
+                if (GRC.relabelBeforeIsoChecks == true) {
+                    Graph sortedLeftGraph = leftGraph.createGraphWithSortedLabels();
+                    Graph sortedRightGraph = rightGraph.createGraphWithSortedLabels();
+                    return areGraphsIsomorphicTreeSearch(sortedLeftGraph, sortedRightGraph);
+                } else {
+                    return areGraphsIsomorphicTreeSearch(leftGraph, rightGraph);
+                }
+
             }
 
         } else {

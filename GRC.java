@@ -10,10 +10,10 @@ public class GRC {
     //Use brute force approach for chekcing for isomorphism. If false, instead use tree search approach
     public static boolean useBruteForceIsomorphismCheck = false;
     //Check that two graphs have the same amount of triangle and or squares before checking for isomorphism
-    public static boolean checkTrianglesBeforeIsoChecks = false;
+    public static boolean checkTrianglesBeforeIsoChecks = true;
     public static boolean checkSquaresBeforeIsoChecks = false;
     //Check for triangle count without using recursion (Yuck!)
-    public static boolean checkTrianglesMichaelsWay = false;
+    public static boolean checkTrianglesNonrecurisveWay = true;
     //Relabel graphs before trying to check for isomorphism
     public static boolean relabelBeforeIsoChecks = false;
 
@@ -22,9 +22,9 @@ public class GRC {
     public static String nonIsomorphicG6KocayOutputFileName = "_nonIsoKocayGraphs.g6";
 
     //Input file information. Given the finite nature of cubic graphs in G6 format, we felt it acceptable to manually enter dimensions of file
-    public static String inputCubicGraphFileName = "_cub12FirstTwo.g6";
-    public static int numberOfG6InFile = 2;
-    public static int lenghtOfG6InFile = 12;
+    public static String inputCubicGraphFileName = "_cub08.g6";
+    public static int numberOfG6InFile = 5;
+    public static int lenghtOfG6InFile = 6;
     // public static String inputCubicGraphFileName = "_nonIsoKocayGraphs.g6";
     // public static int numberOfG6InFile = 19;
     // public static int lenghtOfG6InFile = 12;
@@ -73,7 +73,7 @@ public class GRC {
         boolean grcHolds = VerifyGRCTools.checkTheseNonIsomorphicKocayGraphsForCounterExample(nonIsomorphicKocayGraphs);
         long timeToCheckNonIsomorphicKocayArrEnd = System.nanoTime();
         if (grcHolds == true) {
-            System.out.println("No graphs in the non-isomorphic kocay array share the same deck.");
+            System.out.println("\nNo graphs in the non-isomorphic kocay array share the same deck. GRC still holds.");
         } else {
             System.out.println("Either we've got an error in our code (Likely) or we've got a counterexample to the GRC!");
         }
@@ -83,11 +83,12 @@ public class GRC {
 
         System.out.println("Parameters:\nBruteForceIsoCheck: " + useBruteForceIsomorphismCheck);
         System.out.println("Triangle Checking: " + checkTrianglesBeforeIsoChecks);
-        System.out.println("Non-recursive Triangle Checking: " + checkTrianglesMichaelsWay);
+        System.out.println("Non-recursive Triangle Checking: " + checkTrianglesNonrecurisveWay);
         System.out.println("Square Checking: " + checkSquaresBeforeIsoChecks);
         System.out.println("Relabeling used: " + relabelBeforeIsoChecks);
         System.out.println("Time to generate kocay graphs: " + (timeToGenerateKocayArrEnd - timeToGenerateKocayArrStart) + " nano-seconds");
         System.out.println("Time to remove isomorphic kocay graphs: " + (timeToGenerateNonIsomorphicKocayArrEnd - timeToGenerateNonIsomorphicKocayArrStart) + " nano-seconds");
         System.out.println("Time to check non-isomorphic kocay graphs: " + (timeToCheckNonIsomorphicKocayArrEnd - timeToCheckNonIsomorphicKocayArrStart) + " nano-seconds");
+
     }
 }
